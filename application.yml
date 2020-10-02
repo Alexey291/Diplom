@@ -1,0 +1,13 @@
+spring.datasource.url: jdbc:mysql://localhost:3306/diploma?serverTimezone=Europe/Moscow
+spring.datasource.username: root
+spring.datasource.password: 14101410
+spring.jpa.hibernate.ddl-auto: validate
+spring.jpa.show-sql: false
+
+
+blog.title: DevPub
+blog.subtitle: Рассказы разработчиков
+blog.phone: +7 911 572-92-48
+blog.email: leshak549@gmail.com
+blog.copyright: Дмитрий Сергеев
+blog.copyrightForm: 2005
