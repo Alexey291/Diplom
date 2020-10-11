@@ -2,9 +2,19 @@ package main.api.response;
 
 import main.base.Post;
 
+import java.util.List;
+
 public class PostResponse {
     private int count;
-    private Post post;
+    private List<Post> posts;
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
 
     public int getCount() {
         return count;
@@ -14,11 +24,5 @@ public class PostResponse {
         this.count = count;
     }
 
-    public Post getPost() {
-        return post;
-    }
 
-    public void setPost(Post post) {
-        this.post = post;
-    }
 }

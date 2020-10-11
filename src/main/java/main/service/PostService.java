@@ -5,9 +5,13 @@ import main.api.response.PostResponse;
 import main.base.User;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class PostService {
     public PostResponse getPosts(){
+        List<Post> posts = new ArrayList<>();
         User user = new User();
         user.setId(92);
         user.setName("Андрей Иванов");
@@ -22,7 +26,8 @@ public class PostService {
         post.setViewCount(1005);
         PostResponse postResponse = new PostResponse();
         postResponse.setCount(1);
-        postResponse.setPost(post);
+        posts.add(post);
+        postResponse.setPosts(posts);
         return postResponse;
     }
 }
