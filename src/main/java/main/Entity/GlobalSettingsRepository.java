@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface GlobalSettingsRepository extends JpaRepository<GlobalSettings, Integer> {
-    @Query(value = "SELECT * FROM global_settings p WHERE p.id = '2'",
+    @Query(value = "SELECT * FROM global_settings p WHERE p.id = '3'",
             nativeQuery = true)
     GlobalSettings getRecentSettings();
 }

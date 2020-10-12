@@ -11,6 +11,16 @@ public class Tags {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    private double weight;
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(@NonNull double weight) {
+        this.weight = weight;
+    }
+
     public int getId() {
         return id;
     }

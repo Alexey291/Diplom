@@ -12,7 +12,7 @@ create table global_settings (
     primary key (id));
 create table post_comments (
     id integer not null auto_increment,
-    parent_id integer not null,
+    parent_id integer,
     post_id integer not null,
     text varchar(255),
     time datetime,
@@ -47,6 +47,7 @@ create table tag2post (
 create table tags (
     id integer not null auto_increment,
     name varchar(255),
+    weight double not null,
     primary key (id));
 create table users (
     id integer not null auto_increment,

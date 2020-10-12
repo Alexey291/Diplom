@@ -16,10 +16,10 @@ public class SettingsService {
         GlobalSettings globalSettings = globalSettingsRepository.getRecentSettings();
         int first = globalSettings.getValue().indexOf(':') + 1;
         int second = globalSettings.getValue().indexOf(' ');
+        int last = globalSettings.getValue().lastIndexOf(':') + 1;
         settingsResponse.setMultiuserMode(Boolean.parseBoolean(globalSettings.getValue().substring(first,second)));
-        //settingsResponse.setMultiuserMode(true);
+        settingsResponse.setStatisticsPublic(Boolean.parseBoolean(globalSettings.getValue().substring(last)));
         settingsResponse.setPostPremoderation(false);
-        settingsResponse.setStatisticsPublic(true);
         return settingsResponse;
     }
 }
