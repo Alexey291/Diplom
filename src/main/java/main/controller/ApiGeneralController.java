@@ -15,14 +15,12 @@ public class ApiGeneralController {
     private final SettingsService settingsService;
     private final CheckService checkService;
     private final TagService tagService;
-    private final PostService postService;
 
-    public ApiGeneralController(InitResponse initResponse, SettingsService settingsService, CheckService checkService, TagService tagService, PostService postService) {
+    public ApiGeneralController(InitResponse initResponse, SettingsService settingsService, CheckService checkService, TagService tagService) {
         this.initResponse = initResponse;
         this.settingsService = settingsService;
         this.checkService = checkService;
         this.tagService = tagService;
-        this.postService = postService;
     }
     @GetMapping("/api/settings")
     private SettingsResponse setting(){
@@ -44,8 +42,4 @@ public class ApiGeneralController {
         return tagService.getTags();
     }
 
-    @GetMapping("/api/post")
-    private PostResponse posts(){
-        return postService.getPosts();
-    }
 }

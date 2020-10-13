@@ -7,6 +7,8 @@ public class Post {
     private String title;
     private String announce;
     private int likeCount;
+    private int dislikeCount;
+    private int viewCount;
 
     public int getId() {
         return id;
@@ -72,6 +74,5 @@ public class Post {
         this.viewCount = viewCount;
     }
 
-    private int dislikeCount;
-    private int viewCount;
+
 }
