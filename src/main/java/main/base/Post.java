@@ -8,7 +8,16 @@ public class Post {
     private String announce;
     private int likeCount;
     private int dislikeCount;
+    private int commentCount;
     private int viewCount;
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 
     public int getId() {
         return id;

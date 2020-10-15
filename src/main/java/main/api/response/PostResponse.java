@@ -1,6 +1,6 @@
 package main.api.response;
 
-import main.base.Post;
+import main.Entity.Post;
 
 import java.util.List;
 

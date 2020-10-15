@@ -7,7 +7,7 @@ insert into users (id, code, email, is_moderator, name, password, reg_time)
 insert into posts (id, is_active, moderation_status, text, time, user_id, view_count)
     values (1, true, 1, 'hello world!', '12.10.2020', 1, 240);
 insert into posts (id, is_active, moderation_status, text, time, user_id, view_count)
-    values (2, true, 1, 'new post', '12.10.2020', 1, 236);
+    values (2, true, 1, 'new post', '2020.10.12', 1, 236);
 insert into posts (id, is_active, moderation_status, text, time, user_id, view_count)
     values (3, true, 1, 'blablablabla', '13.10.2020', 2, 510);
 insert into post_comments (id, post_id, text, time, user_id)

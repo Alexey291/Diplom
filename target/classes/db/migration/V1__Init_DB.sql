@@ -29,10 +29,10 @@ create table posts (
     id integer not null auto_increment,
     is_active bit,
     moderation_status integer,
-    text tinyblob,
-    time datetime,
+    text varchar(255),
+    time date,
     user_id integer not null,
-    view_count tinyblob, primary key (id));
+    view_count integer, primary key (id));
 create table posts_comments (
     post_id integer not null,
     comments_id integer not null);

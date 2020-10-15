@@ -1,9 +1,9 @@
 package main.Entity;
 
+import lombok.Data;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
-
 @Entity
 @Table(name = "Tags")
 public class Tags {

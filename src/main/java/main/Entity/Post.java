@@ -1,14 +1,16 @@
 package main.Entity;
 
-import lombok.Setter;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import main.Status;
-import lombok.Getter;
+
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-
+@Data
 @Entity
 @Table(name = "Posts")
 public class Post {
@@ -21,9 +23,12 @@ public class Post {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id",  insertable = false, updatable = false)
     private User user;
-    private Date time;
-    private StringBuilder text;
-    private AtomicInteger view_count;
+    @JsonProperty("timestamp")
+    private java.sql.Date time;
+    @JsonProperty("announce")
+    private String text;
+    @JsonProperty("viewCount")
+    private int view_count;
     private int user_id;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostVotes> votes = new ArrayList<>();
@@ -80,27 +85,27 @@ public class Post {
         return user;
     }
 
-    public Date getTime() {
+    public java.sql.Date getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(java.sql.Date time) {
         this.time = time;
     }
 
-    public StringBuilder getText() {
+    public String getText() {
         return text;
     }
 
-    public void setText(StringBuilder text) {
+    public void setText(String text) {
         this.text = text;
     }
 
-    public AtomicInteger getView_count() {
+    public int getView_count() {
         return view_count;
     }
 
-    public void setView_count(AtomicInteger view_count) {
+    public void setView_count(int view_count) {
         this.view_count = view_count;
     }
 
