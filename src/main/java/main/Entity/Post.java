@@ -3,6 +3,8 @@ package main.Entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import main.Status;
 
 import org.springframework.lang.NonNull;
@@ -24,7 +26,7 @@ public class Post {
     @JoinColumn(name = "user_id",  insertable = false, updatable = false)
     private User user;
     @JsonProperty("timestamp")
-    private java.sql.Date time;
+    private Date time;
     @JsonProperty("announce")
     private String text;
     @JsonProperty("viewCount")
@@ -34,6 +36,12 @@ public class Post {
     private List<PostVotes> votes = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostComment> comments = new ArrayList<>();
+
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
 
     public List<PostComment> getComments() {
         return comments;
@@ -85,11 +93,11 @@ public class Post {
         return user;
     }
 
-    public java.sql.Date getTime() {
-        return time;
+    public Long getTime() {
+        return time.getTime();
     }
 
-    public void setTime(java.sql.Date time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 
