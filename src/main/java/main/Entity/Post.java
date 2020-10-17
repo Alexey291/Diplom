@@ -139,7 +139,7 @@ public class Post {
     public User getUser() {
         return user;
     }
-
+    // Время тут сильно преувеличино, не могу понять почему
     @JsonProperty("timestamp")
     public Long getTimeForFront() {
         return timePost.getTime();
