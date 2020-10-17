@@ -7,9 +7,12 @@ import lombok.Getter;
 import lombok.Setter;
 import main.Status;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 @Data
@@ -26,17 +29,27 @@ public class Post {
     @JoinColumn(name = "user_id",  insertable = false, updatable = false)
     private User user;
     @JsonProperty("timestamp")
-    private Date time;
+    @Column(name = "time_post")
+    private Date timePost;
     @JsonProperty("announce")
     private String text;
     @JsonProperty("viewCount")
     private int view_count;
+    private String title;
     private int user_id;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostVotes> votes = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostComment> comments = new ArrayList<>();
+    
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(@NonNull String title) {
+        this.title = title;
+    }
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
@@ -93,12 +106,13 @@ public class Post {
         return user;
     }
 
+
     public Long getTime() {
-        return time.getTime();
+        return timePost.getTime();
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setTime(Date timePost) {
+        this.timePost = timePost;
     }
 
     public String getText() {

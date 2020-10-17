@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
-    @Query(value = "SELECT * FROM posts p WHERE p.is_active = 1 AND p.moderation_status = 1 AND p.`time` < NOW(); ",
+    @Query(value = "SELECT * FROM posts p WHERE p.is_active = 1 AND p.moderation_status = 1 AND p.`time_post` < NOW(); ",
             nativeQuery = true)
     List<Post> getRecentPosts();
 }

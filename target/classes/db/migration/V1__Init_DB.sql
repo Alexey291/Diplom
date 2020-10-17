@@ -29,8 +29,9 @@ create table posts (
     id integer not null auto_increment,
     is_active bit,
     moderation_status integer,
+    title varchar(255) not null,
     text varchar(255),
-    time date,
+    time_post datetime,
     user_id integer not null,
     view_count integer, primary key (id));
 create table posts_comments (
