@@ -29,7 +29,8 @@ public class PostService {
             e.printStackTrace();
         }
         return null;
-
-
+    }
+    public Post getOnePost(int id){
+        return  postRepository.findById(id);
     }
 }
