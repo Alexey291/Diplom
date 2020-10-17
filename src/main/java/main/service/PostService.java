@@ -1,6 +1,7 @@
 package main.service;
 
-import main.Entity.PostComment;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import main.Entity.PostRepository;
 
 import main.api.response.PostResponse;

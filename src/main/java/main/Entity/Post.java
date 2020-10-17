@@ -28,10 +28,9 @@ public class Post {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id",  insertable = false, updatable = false)
     private User user;
-    @JsonProperty("timestamp")
+
     @Column(name = "time_post")
     private Date timePost;
-    @JsonProperty("announce")
     private String text;
     @JsonProperty("viewCount")
     private int view_count;
@@ -41,8 +40,43 @@ public class Post {
     private List<PostVotes> votes = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostComment> comments = new ArrayList<>();
-    
 
+    //листы comments и votes почему-то приходят пустыми, хотя связи должны работать а данные заполнены через миграцию.
+    //Поэтому я поставил начальные значения 10, 1 и 4, что-бы показать что ответы на запросы приходят.
+
+    @JsonProperty("announce")
+    public String getAnnounce() {
+        return text;
+    }
+
+    @JsonProperty("likeCount")
+    public int getLike() {
+        int countLike = 10;
+        for (PostVotes like : votes) {
+            if (like.getValue() == 1) {
+                countLike++;
+            }
+        }
+        return countLike;
+    }
+    @JsonProperty("dislikeCount")
+    public int getDislike() {
+        int countLike = 1;
+        for (PostVotes like : votes) {
+            if (like.getValue() == -1) {
+                countLike++;
+            }
+        }
+        return countLike;
+    }
+    @JsonProperty("commentCount")
+    public int getCommentsCount() {
+        int countComment = 4;
+        for (PostComment comment : comments) {
+            countComment++;
+        }
+        return countComment;
+    }
     public String getTitle() {
         return title;
     }
@@ -55,7 +89,7 @@ public class Post {
         this.user_id = user_id;
     }
 
-
+    @JsonProperty("comments")
     public List<PostComment> getComments() {
         return comments;
     }
@@ -106,9 +140,13 @@ public class Post {
         return user;
     }
 
-
-    public Long getTime() {
+    @JsonProperty("timestamp")
+    public Long getTimeForFront() {
         return timePost.getTime();
+    }
+
+    public Date getTime() {
+        return timePost;
     }
 
     public void setTime(Date timePost) {

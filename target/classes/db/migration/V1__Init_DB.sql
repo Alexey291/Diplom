@@ -21,7 +21,7 @@ create table post_comments (
 create table post_votes (
     id integer not null auto_increment,
     post_id integer not null,
-    time datetime,
+    time_votes datetime,
     user_id integer not null,
     value tinyint not null,
     primary key (id));

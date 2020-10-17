@@ -1,5 +1,6 @@
 package main.Entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -18,7 +19,8 @@ public class PostVotes {
     @ManyToOne
     @JoinColumn(name = "post_id",  insertable = false, updatable = false)
     private Post post;
-    private Date time;
+    @Column(name = "time_votes")
+    private Date timeVotes;
     private byte value;
     private int user_id;
     private int post_id;
@@ -48,11 +50,11 @@ public class PostVotes {
     }
 
     public Date getTime() {
-        return time;
+        return timeVotes;
     }
 
     public void setTime(@NonNull Date time) {
-        this.time = time;
+        this.timeVotes = time;
     }
 
     public byte getValue() {

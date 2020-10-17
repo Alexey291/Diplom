@@ -12,8 +12,10 @@ insert into posts (id, is_active, moderation_status, title, text, time_post, use
     values (3, true, 1, 'third post','blablablabla', '2020.10.12 08:08:11', 2, 510);
 insert into post_comments (id, post_id, text, time, user_id)
     values (1, 1, 'hello!', '12.10.2020', 1);
-insert into post_votes (id, post_id, time, user_id, value)
+insert into post_votes (id, post_id, time_votes, user_id, value)
     values (1, 1, '12.10.2020', 1, 1);
+insert into post_votes (id, post_id, time_votes, user_id, value)
+    values (2, 2, '12.10.2020', 1, -1);
 insert into tags (id, name, weight)
     values (1, 'java', 1);
 insert into tags (id, name, weight)
