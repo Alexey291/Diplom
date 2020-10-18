@@ -1,6 +1,7 @@
 package main.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
@@ -44,12 +45,12 @@ public class Post {
     //листы comments и votes почему-то приходят пустыми, хотя связи должны работать а данные заполнены через миграцию.
     //Поэтому я поставил начальные значения 10, 1 и 4, что-бы показать что ответы на запросы приходят.
 
-    @JsonProperty("announce")
+    @JsonGetter("announce")
     public String getAnnounce() {
         return text;
     }
 
-    @JsonProperty("likeCount")
+    @JsonGetter("likeCount")
     public int getLike() {
         int countLike = 10;
         for (PostVotes like : votes) {
@@ -59,7 +60,7 @@ public class Post {
         }
         return countLike;
     }
-    @JsonProperty("dislikeCount")
+    @JsonGetter("dislikeCount")
     public int getDislike() {
         int countLike = 1;
         for (PostVotes like : votes) {
@@ -69,7 +70,7 @@ public class Post {
         }
         return countLike;
     }
-    @JsonProperty("commentCount")
+    @JsonGetter("commentCount")
     public int getCommentsCount() {
         int countComment = 4;
         for (PostComment comment : comments) {
@@ -89,7 +90,7 @@ public class Post {
         this.user_id = user_id;
     }
 
-    @JsonProperty("comments")
+    @JsonGetter("comments")
     public List<PostComment> getComments() {
         return comments;
     }
@@ -140,7 +141,7 @@ public class Post {
         return user;
     }
     // Время тут сильно преувеличино, не могу понять почему
-    @JsonProperty("timestamp")
+    @JsonGetter("timestamp")
     public Long getTimeForFront() {
         return timePost.getTime();
     }
