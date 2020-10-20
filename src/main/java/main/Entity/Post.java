@@ -29,7 +29,6 @@ public class Post {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id",  insertable = false, updatable = false)
     private User user;
-
     @Column(name = "time_post")
     private Date timePost;
     private String text;
@@ -169,7 +168,5 @@ public class Post {
     public void setView_count(int view_count) {
         this.view_count = view_count;
     }
-
-
 
 }

@@ -7,7 +7,7 @@ import javax.swing.text.html.HTML;
 
 @Entity
 @Table(name =  "tag2post")
-public class tag2post {
+public class Tag2post {
 
     @Id
     @Column(name = "id")

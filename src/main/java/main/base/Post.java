@@ -1,4 +1,4 @@
-package main.base;
+/*package main.base;
 
 public class Post {
     private int id;
@@ -85,3 +85,6 @@ public class Post {
 
 
 }
+
+
+ */
