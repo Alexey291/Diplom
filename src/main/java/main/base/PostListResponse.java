@@ -1,9 +1,9 @@
-/*package main.base;
+package main.base;
 
-public class Post {
+public class PostListResponse {
     private int id;
     private long timestamp;
-    private User user;
+    private UserPostResponse userPostResponse;
     private String title;
     private String announce;
     private int likeCount;
@@ -35,12 +35,12 @@ public class Post {
         this.timestamp = timestamp;
     }
 
-    public User getUser() {
-        return user;
+    public UserPostResponse getUser() {
+        return userPostResponse;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(UserPostResponse userPostResponse) {
+        this.userPostResponse = userPostResponse;
     }
 
     public String getTitle() {
@@ -87,4 +87,3 @@ public class Post {
 }
 
 
- */

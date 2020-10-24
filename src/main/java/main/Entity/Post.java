@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import main.Status;
 
+import main.base.PostCommentsResponce;
+import main.base.UserPostResponse;
 import org.apache.tomcat.jni.Local;
 import org.springframework.lang.NonNull;
 
@@ -51,27 +53,32 @@ public class Post {
 
     @JsonGetter("likeCount")
     public int getLike() {
-        int countLike = 10;
+        int countLike = 0;
         for (PostVotes like : votes) {
             if (like.getValue() == 1) {
                 countLike++;
             }
         }
+        System.out.print(votes.size());
         return countLike;
     }
-    @JsonGetter("dislikeCount")
-    public int getDislike() {
-        int countLike = 1;
-        for (PostVotes like : votes) {
-            if (like.getValue() == -1) {
-                countLike++;
-            }
+
+    public List<PostCommentsResponce> getCommentsResponce(){
+        List<PostCommentsResponce> newComments = new ArrayList<>();
+        for (PostComment comment : comments){
+            PostCommentsResponce postCommentsResponce = new PostCommentsResponce();
+            postCommentsResponce.setId(comment.getId());
+            postCommentsResponce.setText(comment.getText());
+            postCommentsResponce.setTimestamp(comment.getTimeForFront());
+            postCommentsResponce.setUser(new UserPostResponse(comment.getUser().getId(), comment.getUser().getName()));
+            newComments.add(postCommentsResponce);
         }
-        return countLike;
+        return newComments;
     }
+
     @JsonGetter("commentCount")
     public int getCommentsCount() {
-        int countComment = 4;
+        int countComment = 0;
         for (PostComment comment : comments) {
             countComment++;
         }
@@ -89,7 +96,7 @@ public class Post {
         this.user_id = user_id;
     }
 
-    @JsonGetter("comments")
+
     public List<PostComment> getComments() {
         return comments;
     }
@@ -142,8 +149,9 @@ public class Post {
     // Время тут сильно преувеличино, не могу понять почему
     @JsonGetter("timestamp")
     public Long getTimeForFront() {
-        return timePost.getTime();
+        return timePost.getTime()/1000;
     }
+
 
     public Date getTime() {
         return timePost;

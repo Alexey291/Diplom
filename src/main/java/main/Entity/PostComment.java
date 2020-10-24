@@ -1,5 +1,6 @@
 package main.Entity;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ public class PostComment {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int parent_id;
+   // private int parent_id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id",  insertable = false, updatable = false)
     private Post post;
@@ -30,12 +31,16 @@ public class PostComment {
         this.id = id;
     }
 
-    public int getParent_id() {
-        return parent_id;
-    }
+  //  public int getParent_id() {
+  //      return parent_id;
+  //  }
 
-    public void setParent_id(int parent_id) {
-        this.parent_id = parent_id;
+   // public void setParent_id(int parent_id) {
+    //    this.parent_id = parent_id;
+   // }
+    @JsonGetter(value = "timestamp")
+    public long getTimeForFront(){
+        return time.getTime()/1000;
     }
 
     public Post getPost() {

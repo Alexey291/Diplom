@@ -29,7 +29,7 @@ public class CheckService {
        }catch (Exception ex){
            ex.printStackTrace();
        }
-       return null;
+       return new CheckResponse();
     }
 }
  /*userResponse.setEmail("leshak549@gmail.com");

@@ -5,7 +5,10 @@ import main.service.CheckService;
 import main.service.PostService;
 import main.service.SettingsService;
 import main.service.TagService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,12 +18,14 @@ public class ApiGeneralController {
     private final SettingsService settingsService;
     private final CheckService checkService;
     private final TagService tagService;
+    private final PostService postService;
 
-    public ApiGeneralController(InitResponse initResponse, SettingsService settingsService, CheckService checkService, TagService tagService) {
+    public ApiGeneralController(InitResponse initResponse, SettingsService settingsService, CheckService checkService, TagService tagService, PostService postService) {
         this.initResponse = initResponse;
         this.settingsService = settingsService;
         this.checkService = checkService;
         this.tagService = tagService;
+        this.postService = postService;
     }
     @GetMapping("/api/settings")
     private SettingsResponse setting(){
@@ -41,5 +46,6 @@ public class ApiGeneralController {
     private TagResponse tags(){
         return tagService.getTags();
     }
+
 
 }

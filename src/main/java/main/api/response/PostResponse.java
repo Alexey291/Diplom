@@ -1,18 +1,19 @@
 package main.api.response;
 
 import main.Entity.Post;
+import main.base.PostListResponse;
 
 import java.util.List;
 
 public class PostResponse {
     private int count;
-    private List<Post> posts;
+    private List<PostListResponse> posts;
 
-    public List<Post> getPosts() {
+    public List<PostListResponse> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Post> posts) {
+    public void setPosts(List<PostListResponse> posts) {
         this.posts = posts;
     }
 

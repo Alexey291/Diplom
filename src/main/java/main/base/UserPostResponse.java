@@ -1,8 +1,13 @@
-/*package main.base;
+package main.base;
 
-public class User {
+public class UserPostResponse {
     private String name;
     private int id;
+
+    public UserPostResponse(int id, String name){
+        this.id = id;
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -20,4 +25,3 @@ public class User {
         this.id = id;
     }
 }
- */
