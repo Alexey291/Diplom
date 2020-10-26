@@ -14,11 +14,20 @@ import main.base.UserPostResponse;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -27,8 +36,27 @@ public class PostService {
     PostRepository postRepository;
     public PostResponse getPosts(int offset, int limit, String mode){
         try {
+
+            Pageable pageable = PageRequest.of(offset / limit, limit,Sort.by("time_post").descending());
+            Pageable pageableForPop = PageRequest.of(offset / limit, limit,Sort.by("view_count").descending());
+            Pageable pageableForDate = PageRequest.of(offset / limit, limit,Sort.by("time_post"));
             PostResponse postResponse = new PostResponse();
-            List<Post> posts = postRepository.getRecentPosts();
+            Page <Post> posts = Page.empty();
+            switch (mode){
+                case "recent":
+                    posts = postRepository.getPostsWithPagination(pageable);
+                    break;
+                case "popular":
+                    posts = postRepository.getPostsPopWithPagination(pageableForPop);
+                    break;
+                case "early":
+                    posts = postRepository.getPostsDateWithPagination((pageableForDate));
+                    break;
+                case "best":
+                    posts = postRepository.getPostsWithPagination(pageable);
+                    break;
+            }
+
             List<PostListResponse> newPosts = new ArrayList<>();
             for (Post post : posts) {
                 PostListResponse postListResponse = new PostListResponse();
@@ -59,10 +87,11 @@ public class PostService {
                 newPosts.add(postListResponse);
             }
             postResponse.setPosts(newPosts);
+            postResponse.setCount(postRepository.getRecentPost().size());
             return postResponse;
+
         }catch (Exception e){
-            e.printStackTrace();
-        }
+            e.printStackTrace();}
         return new PostResponse();
     }
     public PostForResponceById getOnePost(int id){

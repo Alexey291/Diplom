@@ -46,22 +46,9 @@ public class Post {
     //листы comments и votes почему-то приходят пустыми, хотя связи должны работать а данные заполнены через миграцию.
     //Поэтому я поставил начальные значения 10, 1 и 4, что-бы показать что ответы на запросы приходят.
 
-    @JsonGetter("announce")
-    public String getAnnounce() {
-        return text;
-    }
 
-    @JsonGetter("likeCount")
-    public int getLike() {
-        int countLike = 0;
-        for (PostVotes like : votes) {
-            if (like.getValue() == 1) {
-                countLike++;
-            }
-        }
-        System.out.print(votes.size());
-        return countLike;
-    }
+
+
 
     public List<PostCommentsResponce> getCommentsResponce(){
         List<PostCommentsResponce> newComments = new ArrayList<>();
@@ -76,7 +63,7 @@ public class Post {
         return newComments;
     }
 
-    @JsonGetter("commentCount")
+
     public int getCommentsCount() {
         int countComment = 0;
         for (PostComment comment : comments) {
@@ -147,7 +134,6 @@ public class Post {
         return user;
     }
     // Время тут сильно преувеличино, не могу понять почему
-    @JsonGetter("timestamp")
     public Long getTimeForFront() {
         return timePost.getTime()/1000;
     }
