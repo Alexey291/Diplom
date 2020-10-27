@@ -123,17 +123,44 @@ public class PostService {
         }
         return new PostForResponceById();
     }
-   /* public PostResponse getPostQuery(int offset, int limit, String query){
-        List<Post> posts = postRepository.getRecentPosts();
-        List<Post> findPost = new ArrayList<>();
-        for (int post = 0; post < posts.size(); post++){
-            if (posts.get(post).getText().contains(query)){
-                findPost.add(post,posts.get(post));}
+    public PostResponse getPostQuery(int offset, int limit, String query){
+        Pageable pageable = PageRequest.of(offset / limit, limit,Sort.by("time_post").descending());
+        Page<Post> posts = postRepository.getPostsWithPagination(pageable);
+        List<PostListResponse> newPosts = new ArrayList<>();
+        //List<Post> findPost = new ArrayList<>();
+        for (Post post : posts) {
+            if (post.getText().contains(query)){
+            PostListResponse postListResponse = new PostListResponse();
+            String textWithoutTags = Jsoup.parse(post.getText()).text();
+            postListResponse.setId(post.getId());
+            postListResponse.setAnnounce(textWithoutTags.substring(0, Math.min(15, textWithoutTags.length())));
+            postListResponse.setTimestamp(post.getTime().getTime() / 1000);
+            postListResponse.setTitle(post.getTitle());
+            postListResponse.setViewCount(post.getView_count());
+
+            User author = post.getUser();
+            postListResponse.setUser(new UserPostResponse(author.getId(), author.getName()));
+
+            postListResponse.setDislikeCount((int) post
+                    .getVotes()
+                    .stream()
+                    .filter(v -> v.getValue() == -1)
+                    .count());
+
+            postListResponse.setLikeCount((int) post
+                    .getVotes()
+                    .stream()
+                    .filter(v -> v.getValue() == 1)
+                    .count());
+
+            postListResponse.setCommentCount(post.getCommentsCount());//-----------------
+
+            newPosts.add(postListResponse);}
         }
         PostResponse postResponse = new PostResponse();
-        postResponse.setPosts(findPost);
+        postResponse.setPosts(newPosts);
         return postResponse;
     }
 
-    */
+
 }
