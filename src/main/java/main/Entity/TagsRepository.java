@@ -12,4 +12,5 @@ public interface TagsRepository extends JpaRepository<Tags,Integer> {
     @Query(value = "SELECT * FROM tags;",
             nativeQuery = true)
     List<Tags> getRecentTags();
+    Tags findByName(String name);
 }

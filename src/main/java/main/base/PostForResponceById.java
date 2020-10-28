@@ -17,7 +17,7 @@ public class PostForResponceById {
     private int dislikeCount;
     private int viewCount;
     private List<PostCommentsResponce> comments;
-    private Tags tags;
+    private List<String> tags;
 
     public int getId() {
         return id;
@@ -99,11 +99,11 @@ public class PostForResponceById {
         this.comments = comments;
     }
 
-    public Tags getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(Tags tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 

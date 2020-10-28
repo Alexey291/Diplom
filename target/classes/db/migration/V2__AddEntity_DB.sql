@@ -92,3 +92,9 @@ insert into tags (id, name, weight)
     values (2, 'php', 0.5);
 insert into tags (id, name, weight)
     values (3, 'c#', 0.8);
+insert into tag2post (id, post_id, tag_id)
+    values (1, 1, 1);
+insert into tag2post (id, post_id, tag_id)
+    values (2, 3, 2);
+insert into tag2post (id, post_id, tag_id)
+    values (3, 5, 3);
