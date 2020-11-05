@@ -1,8 +1,7 @@
 package main.service;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import main.Entity.*;
+import main.entity.*;
 
 import main.api.response.PostResponse;
 
@@ -16,16 +15,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Service
@@ -40,7 +35,7 @@ public class PostService {
         try {
 
             Pageable pageable = PageRequest.of(offset / limit, limit,Sort.by("time_post").descending());
-            Pageable pageableForPop = PageRequest.of(offset / limit, limit,Sort.by("view_count").descending());
+            Pageable pageableForPop = PageRequest.of(offset / limit, limit);
             Pageable pageableForDate = PageRequest.of(offset / limit, limit,Sort.by("time_post"));
             PostResponse postResponse = new PostResponse();
             Page <Post> posts = Page.empty();
@@ -52,64 +47,31 @@ public class PostService {
                     posts = postRepository.getPostsPopWithPagination(pageableForPop);
                     break;
                 case "early":
-                    posts = postRepository.getPostsDateWithPagination((pageableForDate));
+                    posts = postRepository.getPostsDateWithPagination(pageableForDate);
                     break;
                 case "best":
-                    posts = postRepository.getPostsWithPagination(pageable);
+                    posts = postRepository.getPostsBestWithPagination(pageableForPop);
                     break;
             }
 
             List<PostListResponse> newPosts = new ArrayList<>();
-            for (Post post : posts) {
-                PostListResponse postListResponse = new PostListResponse();
-                String textWithoutTags = Jsoup.parse(post.getText()).text();
-                postListResponse.setId(post.getId());
-                postListResponse.setAnnounce(textWithoutTags.substring(0, Math.min(15, textWithoutTags.length())));
-                postListResponse.setTimestamp(post.getTime().getTime() / 1000);
-                postListResponse.setTitle(post.getTitle());
-                postListResponse.setViewCount(post.getView_count());
-
-                User author = post.getUser();
-                postListResponse.setUser(new UserPostResponse(author.getId(), author.getName()));
-
-                postListResponse.setDislikeCount((int) post
-                        .getVotes()
-                        .stream()
-                        .filter(v -> v.getValue() == -1)
-                        .count());
-
-                postListResponse.setLikeCount((int) post
-                        .getVotes()
-                        .stream()
-                        .filter(v -> v.getValue() == 1)
-                        .count());
-
-                postListResponse.setCommentCount(post.getCommentsCount());//-----------------
-
-                newPosts.add(postListResponse);
-            }
-            postResponse.setPosts(newPosts);
-            postResponse.setCount(postRepository.getRecentPost().size());
+            List<PostListResponse> newPostsPut = getPostList(posts,newPosts);
+            postResponse.setPosts(newPostsPut);
+            postResponse.setCount((int)posts.getTotalElements());
             return postResponse;
 
         }catch (Exception e){
             e.printStackTrace();}
         return new PostResponse();
     }
-    public PostForResponceById getOnePost(int id){
+    public PostForResponceById getPost(int id){
         try {
-            List<Tag2post> listTag2Post = tag2PostRepository.findAll().stream().filter(t -> t.getPost_id() == id).collect(Collectors.toList());
-            List<Tags> listTag = tagsRepository.getRecentTags();
+            List<Tags> listTag = tagsRepository.getTagsForPost(id);
             List<String> finalListTag = new ArrayList<>();
-            for (Tag2post tag2post : listTag2Post) {
-               // System.out.println(tag2post.getId());
                 for (Tags tag : listTag) {
-                   // System.out.print(tag.getName());
-                    if (tag.getId() == tag2post.getId()) {
                         finalListTag.add(tag.getName());
-                    }
                 }
-            }
+
             Post post = postRepository.findById(id);
             PostForResponceById newPost = new PostForResponceById();
             newPost.setActive(post.getIs_active());
@@ -140,11 +102,47 @@ public class PostService {
     }
     public PostResponse getPostQuery(int offset, int limit, String query){
         Pageable pageable = PageRequest.of(offset / limit, limit,Sort.by("time_post").descending());
-        List<Post> posts = postRepository.getRecentPost();
+        Page<Post> posts = postRepository.findPostsWithPartOfTextWithPagination(query,pageable);
         List<PostListResponse> newPosts = new ArrayList<>();
-        //List<Post> findPost = new ArrayList<>();
+        List<PostListResponse> newPostsPut = getPostList(posts,newPosts);
+        PostResponse postResponse = new PostResponse();
+        postResponse.setPosts(newPostsPut);
+        postResponse.setCount((int)posts.getTotalElements());
+        return postResponse;
+    }
+    public PostResponse getPostByDate(int offset, int limit, LocalDate date){
+        Pageable pageable = PageRequest.of(offset / limit, limit,Sort.by("time_post").descending());
+        Page<Post> posts = postRepository.getPostDateWithPagination(1,1,
+                Date.from(date.minusDays(1).atTime(23, 59,59).toInstant(ZoneOffset.UTC)),
+                Date.from(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()),pageable);
+        List<PostListResponse> newPost = new ArrayList<>();
+        List<PostListResponse> newPostsPut = getPostList(posts,newPost);
+        PostResponse postResponse = new PostResponse();
+        postResponse.setPosts(newPostsPut);
+        postResponse.setCount((int)posts.getTotalElements());
+        return postResponse;
+    }
+    public PostResponse getPostByTag(int offset, int limit, String tag){
+        Pageable pageable = PageRequest.of(offset / limit, limit,Sort.by("time_post").descending());
+        Page<Post> posts = postRepository.getPostTagWithPagination(1,1,tag,pageable);
+        List<PostListResponse> newPosts = new ArrayList<>();
+        try {
+            List<PostListResponse> newPostsPut = getPostList(posts,newPosts);
+            PostResponse postResponse = new PostResponse();
+            postResponse.setPosts(newPostsPut);
+            postResponse.setCount((int)posts.getTotalElements());
+            return postResponse;
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+            PostResponse postResponse = new PostResponse();
+            postResponse.setCount(0);
+            return postResponse;
+        }
+
+    }
+    public static List<PostListResponse> getPostList(Page<Post> posts,List<PostListResponse> newPosts){
         for (Post post : posts) {
-            if (post.getText().contains(query)){
             PostListResponse postListResponse = new PostListResponse();
             String textWithoutTags = Jsoup.parse(post.getText()).text();
             postListResponse.setId(post.getId());
@@ -169,96 +167,8 @@ public class PostService {
                     .count());
 
             postListResponse.setCommentCount(post.getCommentsCount());//-----------------
-
             newPosts.add(postListResponse);}
-        }
-        PostResponse postResponse = new PostResponse();
-        postResponse.setPosts(newPosts);
-        return postResponse;
-    }
-    public PostResponse getPostByDate(int offset, int limit, LocalDate date){
-        LocalDateTime date1 = date.atStartOfDay();
-        List<Post> posts = postRepository.getRecentPost();
-        List<PostListResponse> newPost = new ArrayList<>();
-        for (Post post : posts) {
-                LocalDateTime localDate = post.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay();
-                if (localDate.isEqual(date1)){
-
-                PostListResponse postListResponse = new PostListResponse();
-                String textWithoutTags = Jsoup.parse(post.getText()).text();
-                postListResponse.setId(post.getId());
-                postListResponse.setAnnounce(textWithoutTags.substring(0, Math.min(15, textWithoutTags.length())));
-                postListResponse.setTimestamp(post.getTime().getTime() / 1000);
-                postListResponse.setTitle(post.getTitle());
-                postListResponse.setViewCount(post.getView_count());
-
-                User author = post.getUser();
-                postListResponse.setUser(new UserPostResponse(author.getId(), author.getName()));
-
-                postListResponse.setDislikeCount((int) post
-                        .getVotes()
-                        .stream()
-                        .filter(v -> v.getValue() == -1)
-                        .count());
-
-                postListResponse.setLikeCount((int) post
-                        .getVotes()
-                        .stream()
-                        .filter(v -> v.getValue() == 1)
-                        .count());
-
-                postListResponse.setCommentCount(post.getCommentsCount());//-----------------
-            newPost.add(postListResponse);}
-        }
-        PostResponse postResponse = new PostResponse();
-        postResponse.setPosts(newPost);
-        return postResponse;
-    }
-    public PostResponse getPostByTag(int offset, int limit, String tag){
-        List<Post> posts = postRepository.getRecentPost();
-        List<PostListResponse> newPosts = new ArrayList<>();
-        Tags tag1 = tagsRepository.findByName(tag);
-        try {
-            Tag2post tag2Post = tag2PostRepository.findByTagId(tag1.getId());
-            for (Post post : posts) {
-                if (post.getId() == tag2Post.getPost_id()){
-                    PostListResponse postListResponse = new PostListResponse();
-                    String textWithoutTags = Jsoup.parse(post.getText()).text();
-                    postListResponse.setId(post.getId());
-                    postListResponse.setAnnounce(textWithoutTags.substring(0, Math.min(15, textWithoutTags.length())));
-                    postListResponse.setTimestamp(post.getTime().getTime() / 1000);
-                    postListResponse.setTitle(post.getTitle());
-                    postListResponse.setViewCount(post.getView_count());
-
-                    User author = post.getUser();
-                    postListResponse.setUser(new UserPostResponse(author.getId(), author.getName()));
-
-                    postListResponse.setDislikeCount((int) post
-                            .getVotes()
-                            .stream()
-                            .filter(v -> v.getValue() == -1)
-                            .count());
-
-                    postListResponse.setLikeCount((int) post
-                            .getVotes()
-                            .stream()
-                            .filter(v -> v.getValue() == 1)
-                            .count());
-
-                    postListResponse.setCommentCount(post.getCommentsCount());//-----------------
-                    newPosts.add(postListResponse);}
-            }
-            PostResponse postResponse = new PostResponse();
-            postResponse.setPosts(newPosts);
-            return postResponse;
-
-        }catch (Exception ex){
-            ex.printStackTrace();
-            PostResponse postResponse = new PostResponse();
-            postResponse.setCount(0);
-            return postResponse;
-        }
-
+        return newPosts;
     }
 
 }

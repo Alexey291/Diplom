@@ -1,6 +1,5 @@
 package main.api.response;
 
-import main.Entity.Post;
 import main.base.PostListResponse;
 
 import java.util.List;

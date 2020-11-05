@@ -1,7 +1,7 @@
 package main.service;
 
-import main.Entity.User;
-import main.Entity.UserRepository;
+import main.entity.User;
+import main.entity.UserRepository;
 import main.api.response.CheckResponse;
 import main.api.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;

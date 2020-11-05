@@ -1,6 +1,6 @@
 package main.api.response;
 
-import main.Entity.Tags;
+import main.entity.Tags;
 
 
 import java.util.List;

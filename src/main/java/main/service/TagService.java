@@ -1,7 +1,7 @@
 package main.service;
 
-import main.Entity.Tags;
-import main.Entity.TagsRepository;
+import main.entity.Tags;
+import main.entity.TagsRepository;
 import main.api.response.TagResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

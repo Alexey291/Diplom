@@ -1,4 +1,4 @@
-package main.Entity;
+package main.entity;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import org.springframework.lang.NonNull;

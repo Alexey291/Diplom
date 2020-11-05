@@ -1,6 +1,5 @@
-package main.Entity;
+package main.entity;
 
-import lombok.Data;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;

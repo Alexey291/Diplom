@@ -1,9 +1,8 @@
 package main.service;
 
-import main.Entity.GlobalSettings;
-import main.Entity.GlobalSettingsRepository;
+import main.entity.GlobalSettings;
+import main.entity.GlobalSettingsRepository;
 import main.api.response.SettingsResponse;
-import org.hibernate.property.access.spi.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

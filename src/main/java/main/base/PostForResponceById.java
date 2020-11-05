@@ -1,8 +1,6 @@
 package main.base;
 
 import lombok.Data;
-import main.Entity.PostComment;
-import main.Entity.Tags;
 
 import java.util.List;
 @Data

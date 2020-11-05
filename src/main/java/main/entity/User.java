@@ -1,4 +1,4 @@
-package main.Entity;
+package main.entity;
 
 import org.springframework.lang.NonNull;
 

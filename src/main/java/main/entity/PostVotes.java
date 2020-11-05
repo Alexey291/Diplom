@@ -1,6 +1,5 @@
-package main.Entity;
+package main.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;

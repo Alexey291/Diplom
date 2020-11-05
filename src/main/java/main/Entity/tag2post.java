@@ -1,9 +1,8 @@
-package main.Entity;
+package main.entity;
 
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
-import javax.swing.text.html.HTML;
 
 @Entity
 @Table(name =  "tag2post")

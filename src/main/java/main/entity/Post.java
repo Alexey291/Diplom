@@ -1,23 +1,16 @@
-package main.Entity;
+package main.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import main.Status;
 
 import main.base.PostCommentsResponce;
 import main.base.UserPostResponse;
-import org.apache.tomcat.jni.Local;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+
 @Data
 @Entity
 @Table(name = "Posts")
@@ -42,12 +35,6 @@ public class Post {
     private List<PostVotes> votes = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostComment> comments = new ArrayList<>();
-
-    //листы comments и votes почему-то приходят пустыми, хотя связи должны работать а данные заполнены через миграцию.
-    //Поэтому я поставил начальные значения 10, 1 и 4, что-бы показать что ответы на запросы приходят.
-
-
-
 
 
     public List<PostCommentsResponce> getCommentsResponce(){
@@ -133,7 +120,7 @@ public class Post {
     public User getUser() {
         return user;
     }
-    // Время тут сильно преувеличино, не могу понять почему
+
     public Long getTimeForFront() {
         return timePost.getTime()/1000;
     }
