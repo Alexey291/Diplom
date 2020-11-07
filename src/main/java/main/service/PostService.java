@@ -34,23 +34,21 @@ public class PostService {
     public PostResponse getPosts(int offset, int limit, String mode){
         try {
 
-            Pageable pageable = PageRequest.of(offset / limit, limit,Sort.by("time_post").descending());
-            Pageable pageableForPop = PageRequest.of(offset / limit, limit);
-            Pageable pageableForDate = PageRequest.of(offset / limit, limit,Sort.by("time_post"));
+            Pageable pageable = PageRequest.of(offset / limit, limit);
             PostResponse postResponse = new PostResponse();
             Page <Post> posts = Page.empty();
             switch (mode){
                 case "recent":
-                    posts = postRepository.getPostsWithPagination(pageable);
+                    posts = postRepository.getPostsNewDateWithPagination(pageable);
                     break;
                 case "popular":
-                    posts = postRepository.getPostsPopWithPagination(pageableForPop);
+                    posts = postRepository.getPostsPopWithPagination(pageable);
                     break;
                 case "early":
-                    posts = postRepository.getPostsDateWithPagination(pageableForDate);
+                    posts = postRepository.getPostsOldDateWithPagination(pageable);
                     break;
                 case "best":
-                    posts = postRepository.getPostsBestWithPagination(pageableForPop);
+                    posts = postRepository.getPostsBestWithPagination(pageable);
                     break;
             }
 
@@ -101,7 +99,7 @@ public class PostService {
         return new PostForResponceById();
     }
     public PostResponse getPostQuery(int offset, int limit, String query){
-        Pageable pageable = PageRequest.of(offset / limit, limit,Sort.by("time_post").descending());
+        Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> posts = postRepository.findPostsWithPartOfTextWithPagination(query,pageable);
         List<PostListResponse> newPosts = new ArrayList<>();
         List<PostListResponse> newPostsPut = getPostList(posts,newPosts);
@@ -123,7 +121,7 @@ public class PostService {
         return postResponse;
     }
     public PostResponse getPostByTag(int offset, int limit, String tag){
-        Pageable pageable = PageRequest.of(offset / limit, limit,Sort.by("time_post").descending());
+        Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> posts = postRepository.getPostTagWithPagination(1,1,tag,pageable);
         List<PostListResponse> newPosts = new ArrayList<>();
         try {

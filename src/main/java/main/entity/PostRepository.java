@@ -27,10 +27,16 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             nativeQuery = true)
     Page<Post> getPostsPopWithPagination(Pageable pageable);
 
-    @Query(value = "SELECT * FROM posts p WHERE p.is_active = 1 AND p.moderation_status = 1 AND p.`time_post` < NOW() ORDER BY 'time_post' DESC",
+    @Query(value = "SELECT * FROM posts p WHERE p.is_active = 1 AND p.moderation_status = 1 AND p.`time_post` < NOW() ORDER BY `time_post`",
             countQuery = "SELECT count(*) FROM Posts WHERE `time_post` < NOW() AND is_active = 1 AND moderation_status = 1",
             nativeQuery = true)
-    Page<Post> getPostsDateWithPagination(Pageable pageable);
+    Page<Post> getPostsOldDateWithPagination(Pageable pageable);
+
+    @Query(value = "SELECT * FROM posts p WHERE p.is_active = 1 AND p.moderation_status = 1 AND p.`time_post` < NOW() ORDER BY `time_post` DESC",
+            countQuery = "SELECT count(*) FROM Posts WHERE `time_post` < NOW() AND is_active = 1 AND moderation_status = 1",
+            nativeQuery = true)
+    Page<Post> getPostsNewDateWithPagination(Pageable pageable);
+
     Page<Post> findAll(Pageable pageable);
     Post findById(int id);
 
@@ -56,12 +62,12 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     @Query(value = "SELECT * " +
             "FROM posts p2 " +
-            "WHERE p2.is_active = 1 AND p2.moderation_status = 1 AND p2.text LIKE CONCAT ('%',:query,'%')",
+            "WHERE p2.is_active = 1 AND p2.moderation_status = 1 AND p2.text LIKE CONCAT ('%',:query,'%') ORDER BY `time_post` DESC",
           nativeQuery = true)
     Page<Post> findPostsWithPartOfTextWithPagination(@Param("query") String query, Pageable pageable);
 
     @Query(value = "SELECT * FROM posts p WHERE p.is_active = :isActive AND p.moderation_status = :moderation " +
-            "AND p.id = (SELECT post_id FROM tag2post WHERE tag_id = (SELECT id FROM tags WHERE name = :name))",
+            "AND p.id = (SELECT post_id FROM tag2post WHERE tag_id = (SELECT id FROM tags WHERE name = :name)) ORDER BY `time_post` DESC",
             nativeQuery = true)
     Page<Post> getPostTagWithPagination(@Param("isActive")int isActive,
                                          @Param("moderation") int moderationStatus,
