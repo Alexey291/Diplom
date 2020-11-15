@@ -10,7 +10,7 @@ import java.util.Date;
 public class CaptchaCodes {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private Date time;
     private String code;

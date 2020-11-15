@@ -28,8 +28,6 @@ public class PostService {
     @Autowired
     PostRepository postRepository;
     @Autowired
-    Tag2PostRepository tag2PostRepository;
-    @Autowired
     TagsRepository tagsRepository;
     public PostResponse getPosts(int offset, int limit, String mode){
         try {
@@ -39,7 +37,7 @@ public class PostService {
             Page <Post> posts = Page.empty();
             switch (mode){
                 case "recent":
-                    posts = postRepository.getPostsNewDateWithPagination(pageable);
+                    posts = postRepository.getPostsNewDateWithPagination(pageable,Status.ACCEPTED);
                     break;
                 case "popular":
                     posts = postRepository.getPostsPopWithPagination(pageable);
@@ -66,9 +64,9 @@ public class PostService {
         try {
             List<Tags> listTag = tagsRepository.getTagsForPost(id);
             List<String> finalListTag = new ArrayList<>();
-                for (Tags tag : listTag) {
-                        finalListTag.add(tag.getName());
-                }
+            for (Tags tag : listTag) {
+                finalListTag.add(tag.getName());
+            }
 
             Post post = postRepository.findById(id);
             PostForResponceById newPost = new PostForResponceById();
@@ -110,7 +108,7 @@ public class PostService {
     }
     public PostResponse getPostByDate(int offset, int limit, LocalDate date){
         Pageable pageable = PageRequest.of(offset / limit, limit,Sort.by("time_post").descending());
-        Page<Post> posts = postRepository.getPostDateWithPagination(1,1,
+        Page<Post> posts = postRepository.getPostDateWithPagination(1,Status.ACCEPTED.name(),
                 Date.from(date.minusDays(1).atTime(23, 59,59).toInstant(ZoneOffset.UTC)),
                 Date.from(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()),pageable);
         List<PostListResponse> newPost = new ArrayList<>();
@@ -122,7 +120,7 @@ public class PostService {
     }
     public PostResponse getPostByTag(int offset, int limit, String tag){
         Pageable pageable = PageRequest.of(offset / limit, limit);
-        Page<Post> posts = postRepository.getPostTagWithPagination(1,1,tag,pageable);
+        Page<Post> posts = postRepository.getPostTagWithPagination(1,Status.ACCEPTED.name(),tag,pageable);
         List<PostListResponse> newPosts = new ArrayList<>();
         try {
             List<PostListResponse> newPostsPut = getPostList(posts,newPosts);

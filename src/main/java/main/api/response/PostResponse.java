@@ -2,11 +2,12 @@ package main.api.response;
 
 import main.base.PostListResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostResponse {
     private int count;
-    private List<PostListResponse> posts;
+    private List<PostListResponse> posts = new ArrayList<>();
 
     public List<PostListResponse> getPosts() {
         return posts;

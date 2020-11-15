@@ -1,6 +1,6 @@
 create table captcha_code (
     id integer not null auto_increment,
-    code varchar(255),
+    code varchar(15000),
     secret_code varchar(255),
     time datetime,
     primary key (id));
@@ -27,7 +27,7 @@ create table post_votes (
 create table posts (
     id integer not null auto_increment,
     is_active bit,
-    moderation_status integer,
+    moderation_status enum('ACCEPTED','NEW','DECLINED') NOT NULL DEFAULT 'NEW',
     title varchar(255) not null,
     text varchar(255),
     time_post datetime,

@@ -20,7 +20,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private Boolean is_active;
-    private Status moderation_status;
+    @Column(name="moderation_status", columnDefinition="enum('NEW','ACCEPTED','DECLINED')")
+    @Enumerated(EnumType.STRING)
+    private Status moderationStatus;
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id",  insertable = false, updatable = false)
     private User user;
@@ -110,11 +112,11 @@ public class Post {
     }
 
     public Status getModeration_status() {
-        return moderation_status;
+        return moderationStatus;
     }
 
     public void setModeration_status(@NonNull Status moderation_status) {
-        this.moderation_status = moderation_status;
+        this.moderationStatus = moderation_status;
     }
 
     public User getUser() {
