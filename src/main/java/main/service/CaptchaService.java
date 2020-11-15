@@ -28,6 +28,7 @@ public class CaptchaService {
         //captchaCodesRepository.deleteAll();
         int countCaptcha = 5;
         if (captchaCodesRepository.count() != countCaptcha){
+            captchaCodesRepository.deleteAll();
             generateCaptcha(6,countCaptcha);
         }
         CaptchaResponce captchaResponce = new CaptchaResponce();
