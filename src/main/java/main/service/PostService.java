@@ -1,6 +1,7 @@
 package main.service;
 
 
+import main.api.response.UserResponse;
 import main.entity.*;
 
 import main.api.response.PostResponse;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class PostService {
+    @Autowired
+    UserRepository userRepository;
     @Autowired
     PostRepository postRepository;
     @Autowired
@@ -62,12 +66,14 @@ public class PostService {
     }
     public PostForResponceById getPost(int id){
         try {
+
+            int countView = postRepository.viewCount(id) + 1;
+            postRepository.updateViewCount(countView,id);
             List<Tags> listTag = tagsRepository.getTagsForPost(id);
             List<String> finalListTag = new ArrayList<>();
             for (Tags tag : listTag) {
                 finalListTag.add(tag.getName());
             }
-
             Post post = postRepository.findById(id);
             PostForResponceById newPost = new PostForResponceById();
             newPost.setActive(post.getIs_active());
@@ -137,6 +143,18 @@ public class PostService {
         }
 
     }
+    public void PostUser(User user){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+        User user1 = new main.entity.User();
+        user1.setCode(user.getCode());
+        user1.setEmail(user.getEmail());
+        user1.setIs_moderator(false);
+        user1.setName(user.getName());
+        user1.setReg_time(new Date());
+        user1.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user1);
+    }
+
     public static List<PostListResponse> getPostList(Page<Post> posts,List<PostListResponse> newPosts){
         for (Post post : posts) {
             PostListResponse postListResponse = new PostListResponse();

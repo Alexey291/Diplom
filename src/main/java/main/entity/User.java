@@ -1,5 +1,7 @@
 package main.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import main.base.Role;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -16,8 +18,9 @@ public class User {
     private Boolean is_moderator;
     private Date reg_time;
     private String name;
+    @JsonProperty("e_mail")
     private String email;
-    private char[] password;
+    private String password;
     private char[] code;
     private String photo;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -90,11 +93,11 @@ public class User {
         this.email = email;
     }
 
-    public char[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(@NonNull char[] password) {
+    public void setPassword(@NonNull String password) {
         this.password = password;
     }
 
@@ -112,6 +115,10 @@ public class User {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public Role getStatus(){
+        return is_moderator ? Role.MODERATOR : Role.USER;
     }
 
 

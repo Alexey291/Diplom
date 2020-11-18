@@ -33,7 +33,7 @@ public class CaptchaService {
         }
         CaptchaResponce captchaResponce = new CaptchaResponce();
         int a = 1;
-        CaptchaCodes captchaCodes = captchaCodesRepository.getOne(a + (int) (Math.random() * countCaptcha));
+        CaptchaCodes captchaCodes = captchaCodesRepository.getOne(a + (int) (Math.random() * (countCaptcha - 1)));
         captchaResponce.setSecret(captchaCodes.getSecret_code());
         captchaResponce.setImage(captchaCodes.getCode());
         return captchaResponce;
