@@ -19,7 +19,8 @@ public class Post {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private Boolean is_active;
+    @Column(name = "is_active")
+    private Boolean isActive;
     @Column(name="moderation_status", columnDefinition="enum('NEW','ACCEPTED','DECLINED')")
     @Enumerated(EnumType.STRING)
     private Status moderationStatus;
@@ -29,10 +30,11 @@ public class Post {
     @Column(name = "time_post")
     private Date timePost;
     private String text;
-    @JsonProperty("viewCount")
-    private int view_count;
+    @Column(name = "view_count")
+    private int viewCount;
     private String title;
-    private int user_id;
+    @Column(name = "user_id")
+    private int userId;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostVotes> votes = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -68,8 +70,8 @@ public class Post {
         this.title = title;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
 
@@ -89,11 +91,11 @@ public class Post {
     public void setUser(User user) {
         this.user = user;
     }
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
-    public void setUser_id(@NonNull User user) {
-        this.user_id = user.getId();
+    public void setUserId(@NonNull User user) {
+        this.userId = user.getId();
     }
     public int getId() {
         return id;
@@ -103,19 +105,19 @@ public class Post {
         this.id = id;
     }
 
-    public Boolean getIs_active() {
-        return is_active;
+    public Boolean getIsActive() {
+        return isActive;
     }
 
-    public void setIs_active(@NonNull Boolean is_active) {
-        this.is_active = is_active;
+    public void setIsActive(@NonNull Boolean is_active) {
+        this.isActive = is_active;
     }
 
-    public Status getModeration_status() {
+    public Status getModerationStatus() {
         return moderationStatus;
     }
 
-    public void setModeration_status(@NonNull Status moderation_status) {
+    public void setModerationStatus(@NonNull Status moderation_status) {
         this.moderationStatus = moderation_status;
     }
 
@@ -144,12 +146,12 @@ public class Post {
         this.text = text;
     }
 
-    public int getView_count() {
-        return view_count;
+    public int getViewCount() {
+        return viewCount;
     }
 
-    public void setView_count(int view_count) {
-        this.view_count = view_count;
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
     }
 
 }

@@ -76,7 +76,7 @@ public class PostService {
             }
             Post post = postRepository.findById(id);
             PostForResponceById newPost = new PostForResponceById();
-            newPost.setActive(post.getIs_active());
+            newPost.setActive(post.getIsActive());
             newPost.setComments(post.getCommentsResponce());
             newPost.setId(post.getId());
             newPost.setDislikeCount((int)post
@@ -92,7 +92,7 @@ public class PostService {
             newPost.setText(post.getText());
             newPost.setTimestamp(post.getTimeForFront());
             newPost.setTitle(post.getTitle());
-            newPost.setViewCount(post.getView_count());
+            newPost.setViewCount(post.getViewCount());
             User author = post.getUser();
             newPost.setUser(new UserPostResponse(author.getId(),author.getName()));
             newPost.setTags(finalListTag);
@@ -163,7 +163,7 @@ public class PostService {
             postListResponse.setAnnounce(textWithoutTags.substring(0, Math.min(15, textWithoutTags.length())));
             postListResponse.setTimestamp(post.getTime().getTime() / 1000);
             postListResponse.setTitle(post.getTitle());
-            postListResponse.setViewCount(post.getView_count());
+            postListResponse.setViewCount(post.getViewCount());
 
             User author = post.getUser();
             postListResponse.setUser(new UserPostResponse(author.getId(), author.getName()));
