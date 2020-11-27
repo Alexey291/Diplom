@@ -6,9 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Diploma project" />
+        <module name="Diplom-main" />
         <module name="Diplom" />
         <module name="Diploma" />
+        <module name="Diploma project" />
       </profile>
     </annotationProcessing>
   </component>
