@@ -28,12 +28,12 @@ import java.util.Date;
 @RequestMapping("/api/auth")
 public class ApiAuthController {
 
-    private final AuthenticationManager authenticationManager;
+        private final AuthenticationManager authenticationManager;
 
     @Autowired
-    CaptchaService captchaService;
+    private final CaptchaService captchaService;
     @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public ApiAuthController(AuthenticationManager authenticationManager, UserRepository userRepository, CaptchaService captchaService){
         this.authenticationManager = authenticationManager;
@@ -50,16 +50,21 @@ public class ApiAuthController {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
         user.setReg_time(new Date());
         user.setPassword((passwordEncoder.encode(user.getPassword())));
+        user.setIs_moderator(false);
         userRepository.save(user);
     }
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
-        Authentication auth =authenticationManager
+        System.out.println(loginRequest.getEmail());
+        System.out.println(loginRequest.getPassword());
+        Authentication auth = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword()));
+        System.out.println("1");
         SecurityContextHolder.getContext().setAuthentication(auth);
         User user = (User) auth.getPrincipal();
         main.entity.User currentUser = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(user.getUsername()));
+        System.out.println(currentUser.getEmail() + "______");
         UserLoginResponse userResponse = new UserLoginResponse();
         userResponse.setEmail(currentUser.getEmail());
         userResponse.setModeration(currentUser.getIs_moderator());

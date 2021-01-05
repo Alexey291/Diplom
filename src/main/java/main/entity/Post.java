@@ -150,7 +150,7 @@ public class Post {
         return viewCount;
     }
 
-    public void setViewCount(int viewCount) {
+    public void setViewCount(int viewCount){
         this.viewCount = viewCount;
     }
 

@@ -21,7 +21,7 @@ public class ApiPostController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('user:write')")
+   // @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity getPost(@RequestParam(required = false,defaultValue = "0") int offset,
                                   @RequestParam(required = false,defaultValue = "10") int limit,
                                   @RequestParam (required = false, defaultValue = "recent") String mode){

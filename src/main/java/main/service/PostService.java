@@ -180,7 +180,7 @@ public class PostService {
                     .filter(v -> v.getValue() == 1)
                     .count());
 
-            postListResponse.setCommentCount(post.getCommentsCount());//-----------------
+            postListResponse.setCommentCount(post.getCommentsCount());
             newPosts.add(postListResponse);}
         return newPosts;
     }
