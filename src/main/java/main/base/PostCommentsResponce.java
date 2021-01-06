@@ -5,7 +5,19 @@ public class PostCommentsResponce {
     private int id;
     private long timestamp;
     private String text;
+    private int parentId;
     private UserPostResponse user;
+
+
+    public int getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
+
+
 
 
     public int getId() {

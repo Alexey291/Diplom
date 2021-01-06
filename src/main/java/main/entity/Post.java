@@ -56,7 +56,7 @@ public class Post {
 
 
     public int getCommentsCount() {
-        int countComment = 0;
+        Integer countComment = 0;
         for (PostComment comment : comments) {
             countComment++;
         }
@@ -150,7 +150,7 @@ public class Post {
         return viewCount;
     }
 
-    public void setViewCount(int viewCount){
+    public void setViewCount(int viewCount) {
         this.viewCount = viewCount;
     }
 
