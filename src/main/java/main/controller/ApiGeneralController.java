@@ -1,6 +1,7 @@
 package main.controller;
 
 import main.api.response.*;
+import main.entity.Post;
 import main.entity.PostComment;
 import main.entity.PostCommentRepository;
 import main.entity.PostRepository;
@@ -57,7 +58,7 @@ public class ApiGeneralController {
     private ResponseEntity calendar(@RequestParam(required = false,defaultValue = "2020") int year){
         return ResponseEntity.ok(calendarService.getCalendar1(year));
     }
-    @PostMapping("/api/comment")
+   /* @PostMapping("/api/comment")
     private void comment(@RequestBody PostComment postComment){
         if (postRepository.findById(postComment.getPost_id()) == null){
             ResponseEntity.badRequest().build();
@@ -68,4 +69,10 @@ public class ApiGeneralController {
 
         }
     }
+    @PostMapping("/api/post")
+    private void post(@RequestBody Post post){
+
+    }
+
+    */
 }

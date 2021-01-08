@@ -13,6 +13,7 @@ create table global_settings (
 create table post_comments (
     id integer not null auto_increment,
     post_id integer not null,
+    parent_id integer,
     text varchar(255),
     time datetime,
     user_id integer not null,
