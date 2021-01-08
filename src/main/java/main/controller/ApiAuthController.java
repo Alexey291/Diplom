@@ -4,17 +4,16 @@ import main.api.response.LoginRequest;
 import main.api.response.LoginResponse;
 //import main.entity.User;
 import main.api.response.UserLoginResponse;
-import main.entity.Post;
-import main.entity.PostRepository;
-import main.entity.Status;
-import main.entity.UserRepository;
+import main.entity.*;
 import main.service.CaptchaService;
+import main.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Date;
+
 
 @RestController
 //@RequestMapping("/api/auth")
@@ -35,12 +35,17 @@ public class ApiAuthController {
     @Autowired
     private final UserRepository userRepository;
     private String email;
+    @Autowired
+    private PostService postService;
+    @Autowired
+    private final PostVotesRepository postVotesRepository;
 
-    public ApiAuthController(AuthenticationManager authenticationManager, PostRepository postRepository, UserRepository userRepository, CaptchaService captchaService){
+    public ApiAuthController(AuthenticationManager authenticationManager, PostRepository postRepository, UserRepository userRepository, CaptchaService captchaService, PostVotesRepository postVotesRepository){
         this.authenticationManager = authenticationManager;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.captchaService = captchaService;
+        this.postVotesRepository = postVotesRepository;
     }
 
     @GetMapping("/api/auth/captcha")
@@ -90,7 +95,40 @@ public class ApiAuthController {
         postFinal.setText(post.getText());
         postFinal.setTitle(post.getTitle());
         postFinal.setTime(new Date());
-
         postRepository.save(postFinal);
+    }
+    @PostMapping("api/post/like")
+    private String postLike(@RequestBody String postId)
+    {
+        Integer postIdPars = Integer.parseInt(postId.replaceAll("\\D",""));
+        main.entity.User user = userRepository.findByEmail(email).get();
+        Post post = postRepository.findById(postIdPars).get();
+        PostVotes postVotes = new PostVotes();
+        postVotes.setPost_id(post);
+        postVotes.setPost(post);
+        postVotes.setUser(user);
+        postVotes.setUser_id(user);
+        postVotes.setTime(new Date());
+        byte z = 1;
+        postVotes.setValue(z);
+        postVotesRepository.save(postVotes);
+        return new String("{\"result\": true}");
+    }
+    @PostMapping("api/post/dislike")
+    private String postDisLike(@RequestBody String postId)
+    {
+        Integer postIdPars = Integer.parseInt(postId.replaceAll("\\D",""));
+        main.entity.User user = userRepository.findByEmail(email).get();
+        Post post = postRepository.findById(postIdPars).get();
+        PostVotes postVotes = new PostVotes();
+        postVotes.setPost_id(post);
+        postVotes.setPost(post);
+        postVotes.setUser(user);
+        postVotes.setUser_id(user);
+        postVotes.setTime(new Date());
+        byte z = 0;
+        postVotes.setValue(z);
+        postVotesRepository.save(postVotes);
+        return new String("{\"result\": true}");
     }
 }

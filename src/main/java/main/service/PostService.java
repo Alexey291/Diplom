@@ -154,6 +154,11 @@ public class PostService {
         user1.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user1);
     }
+   /* public void putLike(Integer id, Integer userId){
+        postRepository.updateLike(id,new Date(),userId);
+    }
+
+    */
 
     public static List<PostListResponse> getPostList(Page<Post> posts,List<PostListResponse> newPosts){
         for (Post post : posts) {

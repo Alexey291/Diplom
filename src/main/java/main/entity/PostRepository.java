@@ -1,6 +1,5 @@
 package main.entity;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -89,5 +88,14 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     nativeQuery = true)
     int updateViewCount(@Param("count") int count,
                         @Param("id") int id);
+/*
+    @Transactional
+    @Modifying
+    @Query(value = "INSERT INTO post_votes VALUES (:post_id, :date, :user_id) ",
+            nativeQuery = true)
+    void updateLike(@Param("post_id") Integer postId,
+                    @Param("date") Date date,
+                    @Param("user_id") Integer userId);
 
+ */
 }
