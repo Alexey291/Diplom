@@ -52,4 +52,5 @@ public class ApiPostController {
                                        @RequestParam(required = false, defaultValue = "10") int limit,
                                        @RequestParam (required = false, defaultValue = "java") String tag){
         return ResponseEntity.ok(postService.getPostByTag(offset,limit,tag));}
+
 }

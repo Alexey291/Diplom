@@ -20,6 +20,27 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             nativeQuery = true)
     Page<Post> getPostsWithPagination(Pageable pageable);
 
+    @Query(value = "SELECT * FROM posts p WHERE p.is_active = 0 AND p.user_id = :id",
+    nativeQuery = true)
+    Page<Post> getPostsWithPaginationForAuthUser(Pageable pageable,
+                                                 @Param("id") int userId);
+
+    @Query(value = "SELECT * FROM posts p WHERE p.is_active = 1 AND moderation_status = 'NEW' " +
+            "AND p.user_id = :id",
+    nativeQuery = true)
+    Page<Post> getPostsWithPaginationPendingForAuth(Pageable pageable,
+                                                    @Param("id") int userId);
+    @Query(value = "SELECT * FROM posts p WHERE p.is_active = 1 AND moderation_status = 'DECLINED' " +
+            "AND p.user_id = :id",
+            nativeQuery = true)
+    Page<Post> getPostsWithPaginationDeclinedForAuth(Pageable pageable,
+                                                    @Param("id") int userId);
+
+    @Query(value = "SELECT * FROM posts p WHERE p.is_active = 1 AND moderation_status = 'ACCEPTED' " +
+            "AND p.user_id = :id",
+            nativeQuery = true)
+    Page<Post> getPostsWithPaginationPublishedForAuth(Pageable pageable,
+                                                     @Param("id") int userId);
 
     @Query(value = "SELECT * " +
             "FROM posts p2 " +
@@ -88,14 +109,5 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     nativeQuery = true)
     int updateViewCount(@Param("count") int count,
                         @Param("id") int id);
-/*
-    @Transactional
-    @Modifying
-    @Query(value = "INSERT INTO post_votes VALUES (:post_id, :date, :user_id) ",
-            nativeQuery = true)
-    void updateLike(@Param("post_id") Integer postId,
-                    @Param("date") Date date,
-                    @Param("user_id") Integer userId);
 
- */
 }

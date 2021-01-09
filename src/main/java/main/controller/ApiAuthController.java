@@ -131,4 +131,11 @@ public class ApiAuthController {
         postVotesRepository.save(postVotes);
         return new String("{\"result\": true}");
     }
+    @GetMapping("api/post/my")
+    public ResponseEntity getMyPost(@RequestParam(required = false, defaultValue = "0") int offset,
+                                  @RequestParam(required = false, defaultValue = "10") int limit,
+                                  @RequestParam(required = false, defaultValue = "inactive") String status){
+        main.entity.User user = userRepository.findByEmail(email).get();
+        return ResponseEntity.ok(postService.getMyPosts(offset,limit,status,user.getId()));
+    }
 }

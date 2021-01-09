@@ -189,5 +189,35 @@ public class PostService {
             newPosts.add(postListResponse);}
         return newPosts;
     }
+    public PostResponse getMyPosts(int offset, int limit, String status, int userId){
+        try {
+            Pageable pageable = PageRequest.of(offset / limit, limit);
+            PostResponse postResponse = new PostResponse();
+            Page <Post> posts = Page.empty();
+            switch (status){
+                case "inactive":
+                    posts = postRepository.getPostsWithPaginationForAuthUser(pageable,userId);
+                    break;
+                case "pending":
+                    posts = postRepository.getPostsWithPaginationPendingForAuth(pageable,userId);
+                    break;
+                case "declined":
+                    posts = postRepository.getPostsWithPaginationDeclinedForAuth(pageable,userId);
+                    break;
+                case "published":
+                    posts = postRepository.getPostsWithPaginationPublishedForAuth(pageable,userId);
+                    break;
+            }
+
+            List<PostListResponse> newPosts = new ArrayList<>();
+            List<PostListResponse> newPostsPut = getPostList(posts,newPosts);
+            postResponse.setPosts(newPostsPut);
+            postResponse.setCount((int)posts.getTotalElements());
+            return postResponse;
+
+        }catch (Exception e){
+            e.printStackTrace();}
+        return new PostResponse();
+    }
 
 }
