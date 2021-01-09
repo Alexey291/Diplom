@@ -4,6 +4,8 @@ import main.api.response.LoginRequest;
 import main.api.response.LoginResponse;
 //import main.entity.User;
 import main.api.response.UserLoginResponse;
+import main.base.CommentForPost;
+import main.base.PostCommentsResponce;
 import main.entity.*;
 import main.service.CaptchaService;
 import main.service.PostService;
@@ -13,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,13 +40,16 @@ public class ApiAuthController {
     private PostService postService;
     @Autowired
     private final PostVotesRepository postVotesRepository;
+    @Autowired
+    private final PostCommentRepository postCommentRepository;
 
-    public ApiAuthController(AuthenticationManager authenticationManager, PostRepository postRepository, UserRepository userRepository, CaptchaService captchaService, PostVotesRepository postVotesRepository){
+    public ApiAuthController(AuthenticationManager authenticationManager, PostRepository postRepository, UserRepository userRepository, CaptchaService captchaService, PostVotesRepository postVotesRepository, PostCommentRepository postCommentRepository){
         this.authenticationManager = authenticationManager;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.captchaService = captchaService;
         this.postVotesRepository = postVotesRepository;
+        this.postCommentRepository = postCommentRepository;
     }
 
     @GetMapping("/api/auth/captcha")
@@ -137,5 +141,20 @@ public class ApiAuthController {
                                   @RequestParam(required = false, defaultValue = "inactive") String status){
         main.entity.User user = userRepository.findByEmail(email).get();
         return ResponseEntity.ok(postService.getMyPosts(offset,limit,status,user.getId()));
+    }
+    @PostMapping("/api/comment")
+    private String comment(@RequestBody CommentForPost postComment){
+
+            PostComment postComment1 = new PostComment();
+            postComment1.setPost(postRepository.findById(postComment.getPost_id()));
+            postComment1.setPost_id(postRepository.findById(postComment.getPost_id()));
+            postComment1.setText(postComment.getText());
+            postComment1.setTime(new Date());
+            postComment1.setParent_id(postComment.getParent_id());
+            postComment1.setUser(userRepository.findByEmail(email).get());
+            postComment1.setUser_id(userRepository.findByEmail(email).get());
+            postCommentRepository.save(postComment1);
+            return new String("{\"id\": " + postComment1.getId() + "}");
+
     }
 }
