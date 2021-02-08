@@ -1,5 +1,6 @@
-package main.entity;
+package main.repo;
 
+import main.entity.GlobalSettings;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -1,5 +1,6 @@
-package main.entity;
+package main.repo;
 
+import main.entity.PostComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

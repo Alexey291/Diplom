@@ -1,7 +1,6 @@
 package main.service;
 
 
-import main.api.response.UserResponse;
 import main.entity.*;
 
 import main.api.response.PostResponse;
@@ -9,6 +8,9 @@ import main.api.response.PostResponse;
 import main.base.PostForResponceById;
 import main.base.PostListResponse;
 import main.base.UserPostResponse;
+import main.repo.PostRepository;
+import main.repo.TagsRepository;
+import main.repo.UserRepository;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -150,7 +151,7 @@ public class PostService {
         user1.setEmail(user.getEmail());
         user1.setIs_moderator(false);
         user1.setName(user.getName());
-        user1.setReg_time(new Date());
+        user1.setRegTime(new Date());
         user1.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user1);
     }

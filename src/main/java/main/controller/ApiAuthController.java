@@ -5,8 +5,13 @@ import main.api.response.LoginResponse;
 //import main.entity.User;
 import main.api.response.UserLoginResponse;
 import main.base.CommentForPost;
+import main.dao.PostCommentImpl;
 import main.dao.PostVotesDAOIml;
 import main.entity.*;
+import main.repo.PostCommentRepository;
+import main.repo.PostRepository;
+import main.repo.PostVotesRepository;
+import main.repo.UserRepository;
 import main.service.CaptchaService;
 import main.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +53,6 @@ public class ApiAuthController {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.captchaService = captchaService;
-
         this.postService = postService;
         this.postVotesRepository = postVotesRepository;
         this.postCommentRepository = postCommentRepository;
@@ -61,7 +65,7 @@ public class ApiAuthController {
     @PostMapping("/api/auth/register")
     private void putUser(@RequestBody main.entity.User user){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
-        user.setReg_time(new Date());
+        user.setRegTime(new Date());
         user.setPassword((passwordEncoder.encode(user.getPassword())));
         user.setIs_moderator(false);
         userRepository.save(user);
@@ -106,7 +110,6 @@ public class ApiAuthController {
     @PostMapping("api/post/like")
     private String postLike(@RequestBody String postId)
     {
-
         try {
             PostVotesDAOIml postVotesDAOIml = new PostVotesDAOIml(userRepository,postVotesRepository,postRepository);
             postVotesDAOIml.save(postId,email);
@@ -119,18 +122,13 @@ public class ApiAuthController {
     @PostMapping("api/post/dislike")
     private String postDisLike(@RequestBody String postId)
     {
-        Integer postIdPars = Integer.parseInt(postId.replaceAll("\\D",""));
-        main.entity.User user = userRepository.findByEmail(email).get();
-        Post post = postRepository.findById(postIdPars).get();
-        PostVotes postVotes = new PostVotes();
-        postVotes.setPost_id(post);
-        postVotes.setPost(post);
-        postVotes.setUser(user);
-        postVotes.setUser_id(user);
-        postVotes.setTime(new Date());
-        byte z = 0;
-        postVotes.setValue(z);
-        postVotesRepository.save(postVotes);
+        try {
+            PostVotesDAOIml postVotesDAOIml = new PostVotesDAOIml(userRepository,postVotesRepository,postRepository);
+            postVotesDAOIml.saveDislike(postId,email);
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }
+
         return new String("{\"result\": true}");
     }
     @GetMapping("api/post/my")
@@ -142,17 +140,15 @@ public class ApiAuthController {
     }
     @PostMapping("/api/comment")
     private String comment(@RequestBody CommentForPost postComment){
+        try {
+            PostCommentImpl postCommentImpl = new PostCommentImpl(postRepository,postCommentRepository,userRepository);
+            int id =  postCommentImpl.save(postComment,email);
+            return new String("{\"id\": " + id + "}");
+        } catch (Exception e){
+            e.printStackTrace();
+            return new String("{\"result\": " + "false" + "}");
+        }
 
-            PostComment postComment1 = new PostComment();
-            postComment1.setPost(postRepository.findById(postComment.getPost_id()));
-            postComment1.setPost_id(postRepository.findById(postComment.getPost_id()));
-            postComment1.setText(postComment.getText());
-            postComment1.setTime(new Date());
-            postComment1.setParent_id(postComment.getParent_id());
-            postComment1.setUser(userRepository.findByEmail(email).get());
-            postComment1.setUser_id(userRepository.findByEmail(email).get());
-            postCommentRepository.save(postComment1);
-            return new String("{\"id\": " + postComment1.getId() + "}");
 
     }
 }

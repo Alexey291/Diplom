@@ -1,10 +1,9 @@
 package main.service;
 
 import com.github.cage.Cage;
-import com.github.cage.GCage;
 import main.api.response.CaptchaResponce;
 import main.entity.CaptchaCodes;
-import main.entity.CaptchaCodesRepository;
+import main.repo.CaptchaCodesRepository;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +13,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
 

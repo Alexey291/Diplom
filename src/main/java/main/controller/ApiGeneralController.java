@@ -1,10 +1,8 @@
 package main.controller;
 
 import main.api.response.*;
-import main.entity.Post;
-import main.entity.PostComment;
-import main.entity.PostCommentRepository;
-import main.entity.PostRepository;
+import main.repo.PostCommentRepository;
+import main.repo.PostRepository;
 import main.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

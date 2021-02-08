@@ -16,7 +16,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private Boolean is_moderator;
-    private Date reg_time;
+    @JsonProperty("reg_time")
+    private Date regTime;
     private String name;
     @JsonProperty("e_mail")
     private String email;
@@ -69,12 +70,12 @@ public class User {
         this.is_moderator = is_moderator;
     }
 
-    public Date getReg_time() {
-        return reg_time;
+    public Date getRegTime() {
+        return regTime;
     }
 
-    public void setReg_time(@NonNull Date reg_time) {
-        this.reg_time = reg_time;
+    public void setRegTime(@NonNull Date regTime) {
+        this.regTime = regTime;
     }
 
     public String getName() {

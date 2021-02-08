@@ -1,5 +1,6 @@
-package main.entity;
+package main.repo;
 
+import main.entity.CaptchaCodes;
 import main.service.CaptchaService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
