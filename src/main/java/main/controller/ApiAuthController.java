@@ -5,7 +5,7 @@ import main.api.response.LoginResponse;
 //import main.entity.User;
 import main.api.response.UserLoginResponse;
 import main.base.CommentForPost;
-import main.base.PostCommentsResponce;
+import main.dao.PostVotesDAOIml;
 import main.entity.*;
 import main.service.CaptchaService;
 import main.service.PostService;
@@ -28,26 +28,28 @@ import java.util.Date;
 //@RequestMapping("/api/auth")
 public class ApiAuthController {
 
-        private final AuthenticationManager authenticationManager;
-    @Autowired
+    private final AuthenticationManager authenticationManager;
+
     private final PostRepository postRepository;
-    @Autowired
+
     private final CaptchaService captchaService;
-    @Autowired
+
     private final UserRepository userRepository;
     private String email;
-    @Autowired
-    private PostService postService;
-    @Autowired
-    private final PostVotesRepository postVotesRepository;
-    @Autowired
-    private final PostCommentRepository postCommentRepository;
 
-    public ApiAuthController(AuthenticationManager authenticationManager, PostRepository postRepository, UserRepository userRepository, CaptchaService captchaService, PostVotesRepository postVotesRepository, PostCommentRepository postCommentRepository){
+    private final PostService postService;
+
+    private final PostVotesRepository postVotesRepository;
+
+    private final PostCommentRepository postCommentRepository;
+    @Autowired
+    public ApiAuthController(AuthenticationManager authenticationManager, PostRepository postRepository, UserRepository userRepository, CaptchaService captchaService, PostService postService, PostVotesRepository postVotesRepository, PostCommentRepository postCommentRepository){
         this.authenticationManager = authenticationManager;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.captchaService = captchaService;
+
+        this.postService = postService;
         this.postVotesRepository = postVotesRepository;
         this.postCommentRepository = postCommentRepository;
     }
@@ -104,18 +106,14 @@ public class ApiAuthController {
     @PostMapping("api/post/like")
     private String postLike(@RequestBody String postId)
     {
-        Integer postIdPars = Integer.parseInt(postId.replaceAll("\\D",""));
-        main.entity.User user = userRepository.findByEmail(email).get();
-        Post post = postRepository.findById(postIdPars).get();
-        PostVotes postVotes = new PostVotes();
-        postVotes.setPost_id(post);
-        postVotes.setPost(post);
-        postVotes.setUser(user);
-        postVotes.setUser_id(user);
-        postVotes.setTime(new Date());
-        byte z = 1;
-        postVotes.setValue(z);
-        postVotesRepository.save(postVotes);
+
+        try {
+            PostVotesDAOIml postVotesDAOIml = new PostVotesDAOIml(userRepository,postVotesRepository,postRepository);
+            postVotesDAOIml.save(postId,email);
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }
+
         return new String("{\"result\": true}");
     }
     @PostMapping("api/post/dislike")

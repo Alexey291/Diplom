@@ -80,7 +80,4 @@ public class PostVotes {
         this.post_id = post.getId();
     }
 
-
-
-
 }
