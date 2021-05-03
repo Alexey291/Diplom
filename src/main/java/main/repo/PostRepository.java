@@ -105,6 +105,18 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             nativeQuery = true)
     int viewCount(@Param("id") int id);
 
+    @Query(value = "SELECT * FROM posts WHERE user_id = :id",
+            nativeQuery = true)
+    List<Post> findPostsByUser(@Param("id") int id);
+
+    @Query(value = "SELECT COUNT(view_count) FROM posts WHERE user_id = :id",
+            nativeQuery = true)
+    int findPostsViewCountByUser(@Param("id") int id);
+
+    @Query(value = "SELECT time_post FROM posts WHERE user_id = :id ORDER BY `time_post` DESC LIMIT 1",
+            nativeQuery = true)
+    Date getDateFromUser(@Param("id") int id);
+
     @Transactional
     @Modifying
     @Query(value = "UPDATE posts p SET p.view_count = :count WHERE p.id = :id",

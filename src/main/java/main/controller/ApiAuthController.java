@@ -1,12 +1,11 @@
 package main.controller;
 
-import main.api.response.LoginRequest;
-import main.api.response.LoginResponse;
+import main.api.response.*;
 //import main.entity.User;
-import main.api.response.UserLoginResponse;
 import main.base.CommentForPost;
 import main.dao.PostCommentImpl;
 import main.dao.PostVotesDAOIml;
+import main.dao.StatisticDAOImpl;
 import main.entity.*;
 import main.repo.PostCommentRepository;
 import main.repo.PostRepository;
@@ -56,6 +55,7 @@ public class ApiAuthController {
         this.postService = postService;
         this.postVotesRepository = postVotesRepository;
         this.postCommentRepository = postCommentRepository;
+
     }
 
     @GetMapping("/api/auth/captcha")
@@ -93,26 +93,54 @@ public class ApiAuthController {
         return ResponseEntity.ok(loginResponse);
     }
     @PostMapping("/api/post")
-    private void post(@RequestBody Post post){
+    private String post(@RequestBody NewPostResponce post){
        // post.setModerationStatus(Status.NEW);
         main.entity.User user = userRepository.findByEmail(email).get();
        // post.setUserId(user.getId());
-        Post postFinal = new Post();
-        postFinal.setModerationStatus(Status.ACCEPTED);
-        postFinal.setUserId(user.getId());
-        postFinal.setIsActive(true);
-        postFinal.setUser(user);
-        postFinal.setText(post.getText());
-        postFinal.setTitle(post.getTitle());
-        postFinal.setTime(new Date());
-        postRepository.save(postFinal);
+        Post post1 = new Post();
+        post1.setTime(new Date());
+        post1.setText(post.getText());
+        post1.setTitle(post.getTitle());
+        post1.setUser(user);
+        post1.setIsActive(true);
+        post1.setUserId(user.getId());
+        post1.setModerationStatus(Status.ACCEPTED);
+        postRepository.save(post1);
+        return new String("{\"result\": true}");
     }
+
+
+    @PutMapping("/api/post/{id}")
+    private String postPut(@RequestBody NewPostResponce post,
+                           @PathVariable int id){
+        postRepository.delete(postRepository.findById(id));
+        main.entity.User user = userRepository.findByEmail(email).get();
+        Post post1 = new Post();
+        post1.setTime(new Date());
+        post1.setText(post.getText());
+        post1.setTitle(post.getTitle());
+        post1.setUser(user);
+        post1.setIsActive(true);
+        post1.setUserId(user.getId());
+        post1.setModerationStatus(Status.ACCEPTED);
+        postRepository.save(post1);
+        return new String("{\"result\": true}");
+    }
+    @GetMapping("/api/statistics/my")
+    private StatisticResponse getStatistic(){
+        main.entity.User user = userRepository.findByEmail(email).get();
+        StatisticDAOImpl statisticDAO = new StatisticDAOImpl(postRepository,userRepository);
+        StatisticResponse statisticResponse = statisticDAO.getStatisticUser(user);
+        return statisticResponse;
+    }
+
     @PostMapping("api/post/like")
     private String postLike(@RequestBody String postId)
     {
         try {
+            main.entity.User user = userRepository.findByEmail(email).get();
             PostVotesDAOIml postVotesDAOIml = new PostVotesDAOIml(userRepository,postVotesRepository,postRepository);
-            postVotesDAOIml.save(postId,email);
+            postVotesDAOIml.save(postId,email,user);
         }catch (Exception exception){
             exception.printStackTrace();
         }
@@ -123,8 +151,9 @@ public class ApiAuthController {
     private String postDisLike(@RequestBody String postId)
     {
         try {
+            main.entity.User user = userRepository.findByEmail(email).get();
             PostVotesDAOIml postVotesDAOIml = new PostVotesDAOIml(userRepository,postVotesRepository,postRepository);
-            postVotesDAOIml.saveDislike(postId,email);
+            postVotesDAOIml.saveDislike(postId,email,user);
         }catch (Exception exception){
             exception.printStackTrace();
         }

@@ -9,13 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PostVotesDAOIml implements PostVotesDAO{
     private final UserRepository userRepository;
     private final PostVotesRepository postVotesRepository;
     private final PostRepository postRepository;
-    private JdbcTemplate jdbcTemplate;
-    final String INSERT_QUERY = "insert into posts_votes (post_id, votes_id) values (4, 12);";
+
+
     @Autowired
     public PostVotesDAOIml(UserRepository userRepository, PostVotesRepository postVotesRepository, PostRepository postRepository) {
         this.userRepository = userRepository;
@@ -23,25 +25,29 @@ public class PostVotesDAOIml implements PostVotesDAO{
         this.postRepository = postRepository;
     }
 
+
+
     @Override
-    public void save(String postId, String email) throws SQLException {
+    public void save(String postId, String email, User user) throws SQLException {
         try {
-            Integer postIdPars = Integer.parseInt(postId.replaceAll("\\D",""));
-            main.entity.User user = userRepository.findByEmail(email).get();
-            Post post = postRepository.findById(postIdPars).get();
+            int postIdInt = Integer.parseInt(postId.replaceAll("\\D",""));
+            Post post = postRepository.findById(postIdInt);
+            AtomicInteger likeCount = new AtomicInteger(0);
+            List<PostVotes> list = post.getVotes();
+            list.forEach(postVotes -> {
+                if (postVotes.getValue() == 1){
+                    likeCount.incrementAndGet();
+                }
+            });
             PostVotes postVotes = new PostVotes();
-            Date date = new Date();
-            postVotes.setPost_id(post);
-            postVotes.setPost(post);
-            postVotes.setUser(user);
+            postVotes.setValue((byte) 1);
+            postVotes.setTime(new Date());
             postVotes.setUser_id(user);
-            postVotes.setTime(date);
-            byte z = 1;
-            postVotes.setValue(z);
-            System.out.println(postIdPars.toString() + " " +Integer.toString(postVotes.getId()) + "-------");
-            jdbcTemplate.update(INSERT_QUERY,post.getId(),postVotes.getId());
-            postVotesRepository.save(postVotes);
-//            int id = postVotesRepository.getId(user.getId(),date);
+            postVotes.setUser(user);
+            postVotes.setPost_id(post);
+            list.add(postVotes);
+            post.setVotes(list);
+            postRepository.save(post);
 
         }catch (Exception exception){
             exception.printStackTrace();
@@ -49,22 +55,30 @@ public class PostVotesDAOIml implements PostVotesDAO{
 
     }
     @Override
-    public void saveDislike(String postId,String email) throws SQLException{
-        Integer postIdPars = Integer.parseInt(postId.replaceAll("\\D",""));
-        main.entity.User user = userRepository.findByEmail(email).get();
-        Post post = postRepository.findById(postIdPars).get();
-        PostVotes postVotes = new PostVotes();
-        Date date = new Date();
-        postVotes.setPost_id(post);
-        postVotes.setPost(post);
-        postVotes.setUser(user);
-        postVotes.setUser_id(user);
-        postVotes.setTime(date);
-        byte z = -1;
-        postVotes.setValue(z);
-        System.out.println(postIdPars.toString() + " " +Integer.toString(postVotes.getId()) + "-------");
-        jdbcTemplate.update(INSERT_QUERY,post.getId(),postVotes.getId());
-        postVotesRepository.save(postVotes);
+    public void saveDislike(String postId,String email, User user) throws SQLException{
+        try {
+            int postIdInt = Integer.parseInt(postId.replaceAll("\\D",""));
+            Post post = postRepository.findById(postIdInt);
+            AtomicInteger likeCount = new AtomicInteger(0);
+            List<PostVotes> list = post.getVotes();
+            list.forEach(postVotes -> {
+                if (postVotes.getValue() == -1){
+                    likeCount.incrementAndGet();
+                }
+            });
+            PostVotes postVotes = new PostVotes();
+            postVotes.setValue((byte) -1);
+            postVotes.setTime(new Date());
+            postVotes.setUser_id(user);
+            postVotes.setUser(user);
+            postVotes.setPost_id(post);
+            list.add(postVotes);
+            post.setVotes(list);
+            postRepository.save(post);
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }
     }
 
     @Override
