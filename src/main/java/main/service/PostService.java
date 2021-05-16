@@ -1,6 +1,7 @@
 package main.service;
 
 
+import main.api.response.ModerationPostResponse;
 import main.entity.*;
 
 import main.api.response.PostResponse;
@@ -236,5 +237,22 @@ public class PostService {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public String postModerationStatus(ModerationPostResponse moderationPostResponse) {
+        System.out.println(moderationPostResponse.getDecision());
+        Post post = postRepository.findById(moderationPostResponse.getPost_id());
+        String status = moderationPostResponse.getDecision();
+
+        if (status.equals("accept")){
+            post.setModerationStatus(Status.ACCEPTED);
+        }
+        else {
+            post.setModerationStatus(Status.DECLINED);
+        }
+        postRepository.save(post);
+        return "{" +
+                " \"result\":true\n" +
+                "}";
     }
 }

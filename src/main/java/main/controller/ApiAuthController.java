@@ -192,4 +192,15 @@ public class ApiAuthController {
         }
         return null;
     }
+
+    @PostMapping("/api/moderation")
+    private ResponseEntity<String> postModeration(@RequestBody ModerationPostResponse moderationPostResponse){
+        try {
+            return ResponseEntity.ok(postService.postModerationStatus(moderationPostResponse));
+        } catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return null;
+    }
 }
