@@ -3,6 +3,7 @@ package main.controller;
 import main.api.response.*;
 //import main.entity.User;
 import main.base.CommentForPost;
+import main.base.PostListResponse;
 import main.dao.PostCommentImpl;
 import main.dao.PostVotesDAOIml;
 import main.dao.StatisticDAOImpl;
@@ -177,7 +178,18 @@ public class ApiAuthController {
             e.printStackTrace();
             return new String("{\"result\": " + "false" + "}");
         }
+    }
+    @GetMapping("/api/post/moderation")
+    private ResponseEntity<PostResponse> getModeration(@RequestParam(required = false,defaultValue = "0") int offset,
+                                                       @RequestParam(required = false,defaultValue = "10") int limit,
+                                                       @RequestParam (required = false, defaultValue = "new") String status){
+        try {
+            System.out.println(status);
+            return ResponseEntity.ok(postService.getPostsByModeration(offset,limit,status));
+        } catch (Exception e){
+            e.printStackTrace();
 
-
+        }
+        return null;
     }
 }

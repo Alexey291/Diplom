@@ -85,6 +85,10 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                                          @Param("moderation") String moderationStatus,
                                          @Param("dayBefore") Date dayBefore,
                                          @Param("dayAfter") Date dayAfter, Pageable pageable);
+    @Query(value = "SELECT * FROM posts p WHERE p.moderation_status = :moderation ORDER BY `time_post` DESC",
+            nativeQuery = true)
+    Page<Post> getPostsWithPaginationForModerationNew(Pageable pageable,
+                                                      @Param("moderation") String moderation);
 
     @Query(value = "SELECT * " +
             "FROM posts p2 " +

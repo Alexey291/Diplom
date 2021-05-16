@@ -221,4 +221,20 @@ public class PostService {
         return new PostResponse();
     }
 
+    public PostResponse getPostsByModeration(int offset, int limit, String status) {
+        try {
+            Pageable pageable = PageRequest.of(offset / limit, limit);
+            PostResponse postResponse = new PostResponse();
+            Page <Post> posts = Page.empty();
+            posts = postRepository.getPostsWithPaginationForModerationNew(pageable,status);
+            List<PostListResponse> newPosts = new ArrayList<>();
+            List<PostListResponse> newPostsPut = getPostList(posts,newPosts);
+            postResponse.setPosts(newPostsPut);
+            postResponse.setCount((int)posts.getTotalElements());
+            return postResponse;
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
 }
