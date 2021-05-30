@@ -12,6 +12,7 @@ import main.repo.PostCommentRepository;
 import main.repo.PostRepository;
 import main.repo.PostVotesRepository;
 import main.repo.UserRepository;
+import main.request.UserRegisterRequest;
 import main.service.CaptchaService;
 import main.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +65,29 @@ public class ApiAuthController {
         return ResponseEntity.ok(captchaService.getCode());
     }
     @PostMapping("/api/auth/register")
-    private void putUser(@RequestBody main.entity.User user){
+    private String putUser(@RequestBody UserRegisterRequest user){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
-        user.setRegTime(new Date());
-        user.setPassword((passwordEncoder.encode(user.getPassword())));
-        user.setIs_moderator(false);
-        userRepository.save(user);
+        main.entity.User user1 = new main.entity.User();
+
+        System.out.println(userRepository.findByEmail(user.getEmail()).isPresent());
+        if (userRepository.findByEmail(user.getEmail()).isPresent() || !user.getCaptcha().equals(user.getCaptcha_secret())){
+            return "{\n" +
+                    " \"result\": false,\n" +
+                    " \"errors\": {\n" +
+                    " \"email\": \"Этот e-mail уже зарегистрирован\",\n" +
+                    " \"name\": \"Имя указано неверно\",\n" +
+                    " \"password\": \"Пароль короче 6-ти символов\",\n" +
+                    " \"captcha\": \"Код с картинки введён неверно\"\n" +
+                    " }\n" +
+                    "}\n";
+        }else {
+        user1.setPassword((passwordEncoder.encode(user.getPassword())));
+        user1.setIs_moderator(false);
+        user1.setRegTime(new Date());
+        user1.setName(user.getName());
+        user1.setEmail(user.getEmail());
+        userRepository.save(user1);
+        return "{\"result\": true}";}
     }
     @PostMapping("/api/auth/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
@@ -141,7 +159,13 @@ public class ApiAuthController {
         try {
             main.entity.User user = userRepository.findByEmail(email).get();
             PostVotesDAOIml postVotesDAOIml = new PostVotesDAOIml(userRepository,postVotesRepository,postRepository);
-            postVotesDAOIml.save(postId,email,user);
+            boolean result = postVotesDAOIml.save(postId,email,user);
+            if (result){
+            return ("{\"result\": true}");}
+            else {
+                return ("{\"result\": false}");
+            }
+
         }catch (Exception exception){
             exception.printStackTrace();
         }
@@ -154,7 +178,12 @@ public class ApiAuthController {
         try {
             main.entity.User user = userRepository.findByEmail(email).get();
             PostVotesDAOIml postVotesDAOIml = new PostVotesDAOIml(userRepository,postVotesRepository,postRepository);
-            postVotesDAOIml.saveDislike(postId,email,user);
+            boolean result = postVotesDAOIml.saveDislike(postId,email,user);
+            if (result){
+                return ("{\"result\": true}");}
+            else {
+                return ("{\"result\": false}");
+            }
         }catch (Exception exception){
             exception.printStackTrace();
         }
