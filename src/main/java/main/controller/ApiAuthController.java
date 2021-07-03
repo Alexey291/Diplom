@@ -16,6 +16,7 @@ import main.request.UserRegisterRequest;
 import main.service.CaptchaService;
 import main.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -96,7 +97,6 @@ public class ApiAuthController {
         System.out.println(loginRequest.getPassword());
         Authentication auth = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword()));
-        System.out.println("1");
         SecurityContextHolder.getContext().setAuthentication(auth);
         User user = (User) auth.getPrincipal();
         main.entity.User currentUser = userRepository.findByEmail(loginRequest.getEmail())
@@ -106,10 +106,26 @@ public class ApiAuthController {
         userResponse.setEmail(currentUser.getEmail());
         userResponse.setModeration(currentUser.getIs_moderator());
         userResponse.setId(currentUser.getId());
+        userResponse.setName(currentUser.getName());
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setResult(true);
         loginResponse.setUserLoginResponse(userResponse);
         return ResponseEntity.ok(loginResponse);
+
+        /*return ("{\n" +
+                " \"result\": true,\n" +
+                " \"user\": {\n" +
+                " \"id\": " + userResponse.getId() + ",\n" +
+                " \"name\": " + user.getUsername() + ",\n" +
+                " \"photo\": \"/avatars/ab/cd/ef/52461.jpg\",\n" +
+                " \"email\": " + userResponse.getEmail() + ",\n" +
+                " \"moderation\": " + userResponse.isModeration() + ",\n" +
+                " \"moderationCount\": " + userResponse.getModerationCount() + ",\n" +
+                " \"settings\": true\n" +
+                " }\n" +
+                "}\n");
+
+         */
     }
     @PostMapping("/api/post")
     private String post(@RequestBody NewPostResponce post){

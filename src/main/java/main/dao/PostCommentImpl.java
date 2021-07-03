@@ -10,7 +10,9 @@ import org.flywaydb.core.internal.jdbc.JdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class PostCommentImpl implements PostCommentDAO{
     private final PostRepository postRepository;
@@ -28,15 +30,20 @@ public class PostCommentImpl implements PostCommentDAO{
     @Override
     public int save(CommentForPost requestComment, String email) throws SQLException {
         PostComment postComment1 = new PostComment();
-        postComment1.setPost(postRepository.findById(requestComment.getPost_id()));
+        Post post = postRepository.findById(requestComment.getPost_id());
+        postComment1.setPost(post);
         postComment1.setPost_id(postRepository.findById(requestComment.getPost_id()));
         postComment1.setText(requestComment.getText());
         postComment1.setTime(new Date());
         postComment1.setParent_id(requestComment.getParent_id());
         postComment1.setUser(userRepository.findByEmail(email).get());
         postComment1.setUser_id(userRepository.findByEmail(email).get());
-        postCommentRepository.save(postComment1);
-        //jdbcTemplate.update(INSERT_QUERY,post.getId(),postComment1.getId());
+        List<PostComment> list = post.getComments();
+        list.add(postComment1);
+        post.setComments(list);
+        postRepository.save(post);
+        //postCommentRepository.save(postComment1);
+
         try {
             return postComment1.getId();
         } catch (Exception exception){
