@@ -2,6 +2,7 @@ package main.service;
 
 
 import main.api.response.ModerationPostResponse;
+import main.api.response.NewPostResponce;
 import main.entity.*;
 
 import main.api.response.PostResponse;
@@ -237,6 +238,44 @@ public class PostService {
             ex.printStackTrace();
         }
         return null;
+    }
+    public String newPost(NewPostResponce post, User user){
+        try {
+            Post newPost = new Post();
+            newPost.setTime(new Date());
+            newPost.setText(post.getText());
+            newPost.setTitle(post.getTitle());
+            newPost.setUser(user);
+            newPost.setIsActive(true);
+            newPost.setUserId(user.getId());
+            newPost.setModerationStatus(Status.ACCEPTED);
+            postRepository.save(newPost);
+            return new String("{\"result\": true}");
+        }catch (Exception e){
+            e.printStackTrace();
+            return "{\"result\": false}";
+        }
+    }
+
+    public String modificationPost(NewPostResponce post, int id, User user){
+        try {
+            postRepository.delete(postRepository.findById(id));
+            Post moderatePost = new Post();
+            moderatePost.setTime(new Date());
+            moderatePost.setText(post.getText());
+            moderatePost.setTitle(post.getTitle());
+            moderatePost.setUser(user);
+            moderatePost.setIsActive(true);
+            moderatePost.setUserId(user.getId());
+            moderatePost.setModerationStatus(Status.ACCEPTED);
+            postRepository.save(moderatePost);
+            return new String("{\"result\": true}");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new String("{\"result\": false}");
+        }
+
+
     }
 
     public String postModerationStatus(ModerationPostResponse moderationPostResponse) {

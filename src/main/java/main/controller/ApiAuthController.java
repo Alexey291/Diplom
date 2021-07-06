@@ -132,34 +132,15 @@ public class ApiAuthController {
        // post.setModerationStatus(Status.NEW);
         main.entity.User user = userRepository.findByEmail(email).get();
        // post.setUserId(user.getId());
-        Post post1 = new Post();
-        post1.setTime(new Date());
-        post1.setText(post.getText());
-        post1.setTitle(post.getTitle());
-        post1.setUser(user);
-        post1.setIsActive(true);
-        post1.setUserId(user.getId());
-        post1.setModerationStatus(Status.ACCEPTED);
-        postRepository.save(post1);
-        return new String("{\"result\": true}");
+        return postService.newPost(post,user);
     }
 
 
     @PutMapping("/api/post/{id}")
     private String postPut(@RequestBody NewPostResponce post,
                            @PathVariable int id){
-        postRepository.delete(postRepository.findById(id));
         main.entity.User user = userRepository.findByEmail(email).get();
-        Post post1 = new Post();
-        post1.setTime(new Date());
-        post1.setText(post.getText());
-        post1.setTitle(post.getTitle());
-        post1.setUser(user);
-        post1.setIsActive(true);
-        post1.setUserId(user.getId());
-        post1.setModerationStatus(Status.ACCEPTED);
-        postRepository.save(post1);
-        return new String("{\"result\": true}");
+        return postService.modificationPost(post,id,user);
     }
     @GetMapping("/api/statistics/my")
     private StatisticResponse getStatistic(){

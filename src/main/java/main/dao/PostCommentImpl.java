@@ -18,8 +18,7 @@ public class PostCommentImpl implements PostCommentDAO{
     private final PostRepository postRepository;
     private final PostCommentRepository postCommentRepository;
     private final UserRepository userRepository;
-    private JdbcTemplate jdbcTemplate;
-    private final String INSERT_QUERY = "insert into posts_comments (post_id, votes_id) values (?,?);";
+
     @Autowired
     public PostCommentImpl(PostRepository postRepository, PostCommentRepository postCommentRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
@@ -42,7 +41,7 @@ public class PostCommentImpl implements PostCommentDAO{
         list.add(postComment1);
         post.setComments(list);
         postRepository.save(post);
-        //postCommentRepository.save(postComment1);
+
 
         try {
             return postComment1.getId();
