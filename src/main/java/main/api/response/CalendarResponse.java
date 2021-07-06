@@ -1,12 +1,13 @@
 package main.api.response;
 
+import main.api.response.marker.Response;
 import main.base.PostForCalendar;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
-public class CalendarResponse {
+public class CalendarResponse implements Response {
     private List<String> years;
     private HashMap<String,Integer> posts;
 

@@ -2,6 +2,7 @@ package main.controller;
 
 import main.api.response.*;
 //import main.entity.User;
+import main.api.response.marker.Response;
 import main.base.CommentForPost;
 import main.base.PostListResponse;
 import main.dao.PostCommentImpl;
@@ -191,6 +192,12 @@ public class ApiAuthController {
     public ResponseEntity getMyPost(@RequestParam(required = false, defaultValue = "0") int offset,
                                   @RequestParam(required = false, defaultValue = "10") int limit,
                                   @RequestParam(required = false, defaultValue = "inactive") String status){
+        if (email == null){
+            return ResponseEntity.ok(new String("{\n" +
+                    " \"count\":0,\n" +
+                    " \"posts\":[]\n" +
+                    "}"));
+        }
         main.entity.User user = userRepository.findByEmail(email).get();
         return ResponseEntity.ok(postService.getMyPosts(offset,limit,status,user.getId()));
     }

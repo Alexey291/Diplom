@@ -3,6 +3,7 @@ package main.service;
 
 import main.api.response.ModerationPostResponse;
 import main.api.response.NewPostResponce;
+import main.api.response.ResultResponse;
 import main.entity.*;
 
 import main.api.response.PostResponse;
@@ -269,10 +270,10 @@ public class PostService {
             moderatePost.setUserId(user.getId());
             moderatePost.setModerationStatus(Status.ACCEPTED);
             postRepository.save(moderatePost);
-            return new String("{\"result\": true}");
+            return ResultResponse.TRUE.getResult();
         }catch (Exception e){
             e.printStackTrace();
-            return new String("{\"result\": false}");
+            return ResultResponse.FALSE.getResult();
         }
 
 

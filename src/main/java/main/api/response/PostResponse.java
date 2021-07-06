@@ -1,11 +1,12 @@
 package main.api.response;
 
+import main.api.response.marker.Response;
 import main.base.PostListResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostResponse {
+public class PostResponse implements Response {
     private int count;
     private List<PostListResponse> posts = new ArrayList<>();
 

@@ -2,8 +2,9 @@ package main.api.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import main.api.response.marker.Response;
 
-public class SettingsResponse {
+public class SettingsResponse implements Response {
     @JsonProperty("MULTIUSER_MODE")
     private boolean multiuserMode;
     @JsonProperty("POST_PREMODERATION")

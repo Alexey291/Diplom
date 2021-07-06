@@ -1,6 +1,8 @@
 package main.api.response;
 
-public class CaptchaResponce {
+import main.api.response.marker.Response;
+
+public class CaptchaResponce implements Response {
 
     private String secret;
     private String image;

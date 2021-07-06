@@ -1,11 +1,12 @@
 package main.api.response;
 
+import main.api.response.marker.Response;
 import main.entity.Tags;
 
 
 import java.util.List;
 
-public class TagResponse {
+public class TagResponse implements Response {
     private List <Tags> tags;
 
     public List<Tags> getTags() {

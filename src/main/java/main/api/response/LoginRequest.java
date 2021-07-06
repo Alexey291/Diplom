@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import main.api.response.marker.Response;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
+public class LoginRequest implements Response {
     @JsonProperty("e_mail")
     private String email;
     private String password;

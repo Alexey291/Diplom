@@ -1,9 +1,10 @@
 package main.api.response;
 
+import main.api.response.marker.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 @Component
-public class InitResponse {
+public class InitResponse implements Response {
     @Value("${blog.title}")
     private String title;
     @Value("${blog.subtitle}")

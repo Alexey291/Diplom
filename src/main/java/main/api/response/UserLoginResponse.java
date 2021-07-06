@@ -1,6 +1,8 @@
 package main.api.response;
 
-public class UserLoginResponse {
+import main.api.response.marker.Response;
+
+public class UserLoginResponse implements Response {
 
     private int id;
     private String name;

@@ -1,8 +1,9 @@
 package main.api.response;
 
+import main.api.response.marker.Response;
 import org.springframework.beans.factory.annotation.Value;
 
-public class UserResponse {
+public class UserResponse implements Response {
     private int id;
     private String name;
     private String photo;
