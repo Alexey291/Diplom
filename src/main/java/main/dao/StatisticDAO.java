@@ -6,4 +6,6 @@ import main.repo.PostRepository;
 
 public interface StatisticDAO {
     public StatisticResponse getStatisticUser(User user);
+
+    public StatisticResponse getStatisticAll();
 }

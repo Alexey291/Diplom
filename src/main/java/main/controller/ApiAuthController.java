@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.NoSuchElementException;
 
 
 @RestController
@@ -145,9 +146,23 @@ public class ApiAuthController {
     }
     @GetMapping("/api/statistics/my")
     private StatisticResponse getStatistic(){
-        main.entity.User user = userRepository.findByEmail(email).get();
+        try {
+            main.entity.User user = userRepository.findByEmail(email).get();
+            StatisticDAOImpl statisticDAO = new StatisticDAOImpl(postRepository,userRepository);
+            StatisticResponse statisticResponse = statisticDAO.getStatisticUser(user);
+            return statisticResponse;
+        }catch (NoSuchElementException e){
+            e.printStackTrace();
+            return new StatisticResponse();
+
+        }
+
+    }
+
+    @GetMapping("/api/statistics/all")
+    private StatisticResponse getStatisticAll(){
         StatisticDAOImpl statisticDAO = new StatisticDAOImpl(postRepository,userRepository);
-        StatisticResponse statisticResponse = statisticDAO.getStatisticUser(user);
+        StatisticResponse statisticResponse = statisticDAO.getStatisticAll();
         return statisticResponse;
     }
 
