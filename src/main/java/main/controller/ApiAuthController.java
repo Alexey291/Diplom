@@ -5,9 +5,7 @@ import main.api.response.*;
 import main.api.response.marker.Response;
 import main.base.CommentForPost;
 import main.base.PostListResponse;
-import main.dao.PostCommentImpl;
-import main.dao.PostVotesDAOIml;
-import main.dao.StatisticDAOImpl;
+import main.dao.*;
 import main.entity.*;
 import main.repo.PostCommentRepository;
 import main.repo.PostRepository;
@@ -38,18 +36,12 @@ import java.util.NoSuchElementException;
 public class ApiAuthController {
 
     private final AuthenticationManager authenticationManager;
-
     private final PostRepository postRepository;
-
     private final CaptchaService captchaService;
-
     private final UserRepository userRepository;
     private String email;
-
     private final PostService postService;
-
     private final PostVotesRepository postVotesRepository;
-
     private final PostCommentRepository postCommentRepository;
     @Autowired
     public ApiAuthController(AuthenticationManager authenticationManager, PostRepository postRepository, UserRepository userRepository, CaptchaService captchaService, PostService postService, PostVotesRepository postVotesRepository, PostCommentRepository postCommentRepository){
@@ -156,7 +148,13 @@ public class ApiAuthController {
             return new StatisticResponse();
 
         }
+    }
 
+    @PostMapping("/api/profile/my")
+    private ResultResponse moderationStatus(@RequestBody ProfileResponse profileResponse){
+        ModerationProfileDAOImpl moderationProfile = new ModerationProfileDAOImpl(userRepository);
+        return moderationProfile.postStatus(profileResponse);
+        //return ResultResponse.TRUE;
     }
 
     @GetMapping("/api/statistics/all")
